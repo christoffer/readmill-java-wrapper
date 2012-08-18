@@ -7,7 +7,6 @@ import org.apache.http.client.methods.*;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.conn.scheme.SocketFactory;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
@@ -22,7 +21,7 @@ public class ApiWrapper {
   private String mClientSecret;
   private Environment mEnvironment;
   private Token mToken;
-  private HttpClient httpClient;
+  private HttpClient mHttpClient;
 
   /**
    * Create a wrapper for a given client and environment.
@@ -31,6 +30,7 @@ public class ApiWrapper {
    * @param clientSecret Client secret
    * @param env          Server environment
    */
+
   public ApiWrapper(String clientId, String clientSecret, Environment env) {
     mClientId = clientId;
     mClientSecret = clientSecret;
@@ -58,7 +58,7 @@ public class ApiWrapper {
   }
 
   public HttpClient getHttpClient() {
-    if(httpClient == null) {
+    if(mHttpClient == null) {
       HttpParams httpParams = new BasicHttpParams();
 
       Scheme httpScheme = new Scheme("http", PlainSocketFactory.getSocketFactory(), 80);
@@ -68,9 +68,9 @@ public class ApiWrapper {
       schemeRegistry.register(httpScheme);
       schemeRegistry.register(httpsScheme);
 
-      httpClient = new DefaultHttpClient(new ThreadSafeClientConnManager(httpParams, schemeRegistry), httpParams);
+      mHttpClient = new DefaultHttpClient(new ThreadSafeClientConnManager(httpParams, schemeRegistry), httpParams);
     }
-    return httpClient;
+    return mHttpClient;
   }
 
   public HttpResponse get(Request request) {
@@ -104,11 +104,16 @@ public class ApiWrapper {
   }
 
   protected Request authorizeRequest(Request request) {
-    if(mToken != null) {
+    // Include any available token
+    if(mToken != null && request.getToken() == null) {
       request.usingToken(mToken);
-    } else if(mClientId != null) {
+    }
+
+    // Fall back to authorization with client id when missing a token
+    if(request.getToken() == null && mClientId != null) {
       request.withParams("client_id", mClientId);
     }
+
     return request;
   }
 
