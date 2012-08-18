@@ -78,6 +78,14 @@ public class Request {
   }
 
   /**
+   * Return the current token for this request.
+   * @return Request token or null
+   */
+  public Token getToken() {
+    return mToken;
+  }
+
+  /**
    * @return a String that is suitable for use as an
    *         <code>application/x-www-form-urlencoded</code> list of parameters
    *         in an HTTP PUT or HTTP POST.
