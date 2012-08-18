@@ -1,14 +1,11 @@
 package com.readmill.api;
 
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
-import org.junit.Test;
+import org.apache.http.client.methods.*;
 
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.nullValue;
-import static org.hamcrest.core.Is.is;
+import org.junit.Test;
 import static org.junit.Assert.assertThat;
+
+import static org.hamcrest.Matchers.*;
 
 public class RequestTest {
 
@@ -83,5 +80,19 @@ public class RequestTest {
   public void queryString() {
     assertThat(Request.to("/users").queryString(), is(""));
     assertThat(Request.to("/users").withParams("user[username]", "christoffer", "private", false).queryString(), is("user%5Busername%5D=christoffer&private=false"));
+  }
+
+  @Test
+  public void equality() {
+    Request first = Request.to("/some/endpoint");
+    Request second = Request.to("/some/endpoint");
+    Request different = Request.to("/some/other/endpoint");
+    assertThat(first.equals(second), is(true));
+    assertThat(second.equals(first), is(true));
+
+    assertThat(first.equals(different), is(false));
+    assertThat(different.equals(first), is(false));
+
+    assertThat(first.equals(4), is(false));
   }
 }

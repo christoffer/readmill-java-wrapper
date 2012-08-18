@@ -121,6 +121,19 @@ public class Request {
     }
   }
 
+  @Override
+  public boolean equals(Object other) {
+    if(other instanceof Request) {
+      return ((Request) other).toUrl().equals(toUrl());
+    }
+    return false;
+  }
+
+  @Override
+  public int hashCode() {
+    return toUrl().hashCode();
+  }
+
   /** Private **/
 
   private void attachParams(HttpRequestBase request) throws UnsupportedEncodingException {
