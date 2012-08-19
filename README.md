@@ -1,5 +1,9 @@
 # Readmill API V2 Wrapper
 
+Wrapper around the Readmill API version 2.
+
+Code is *heavily* inspired by the excellent [Java wrapper for SoundCloud](https://github.com/soundcloud/java-api-wrapper).
+
 Example usage:
 
 ```java
@@ -11,7 +15,7 @@ Example usage:
   JSONArray readings = wrapper.get("/users/1/readings").
                order("created_at").from("2012-08-13:37:00Z").
                count(50).
-               jsonItems("reading") // array of readings
+               jsonItems("reading") // returns an array of readings
 ```
 
 For authenticated requests you need to obtain an access token.
@@ -23,9 +27,8 @@ For authenticated requests you need to obtain an access token.
   wrapper.setToken(myAccessToken);
 
   // Create
-  reading = wrapper.post("/books/20461/readings").
-              readingState("reading").readingVia(1).
-              json("reading"); // => the created reading
+  reading = wrapper.post("/books/20461/readings").readingState("reading").readingVia(1).
+              json("reading"); // => returns the reading
 
   // Update
   wrapper.put("/readings/" + reading.getInt("id")).readingState("finished").json();
