@@ -34,7 +34,12 @@ public class RequestBuilder {
 
   public JSONArray jsonItems(String unwrapKey) {
     JSONArray items = json().optJSONArray("items");
+    if(items == null || items.length() == 0) {
+      return new JSONArray();
+    }
+
     ArrayList<JSONObject> unwrapped = new ArrayList<JSONObject>(items.length());
+
     try {
       for(int i = 0; i < items.length(); i++) {
         unwrapped.add(items.getJSONObject(i).getJSONObject(unwrapKey));
