@@ -16,7 +16,7 @@ import org.apache.http.params.HttpParams;
 import java.io.IOException;
 import java.net.URI;
 
-public class ApiWrapper {
+public class ReadmillWrapper {
   private String mClientId;
   private String mClientSecret;
   private Environment mEnvironment;
@@ -31,7 +31,7 @@ public class ApiWrapper {
    * @param env          Server environment
    */
 
-  public ApiWrapper(String clientId, String clientSecret, Environment env) {
+  public ReadmillWrapper(String clientId, String clientSecret, Environment env) {
     mClientId = clientId;
     mClientSecret = clientSecret;
     mEnvironment = env;

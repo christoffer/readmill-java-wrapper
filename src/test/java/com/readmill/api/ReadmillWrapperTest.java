@@ -15,13 +15,13 @@ import java.io.IOException;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
-public class ApiWrapperTest {
-  private ApiWrapper mWrapper;
+public class ReadmillWrapperTest {
+  private ReadmillWrapper mWrapper;
 
   @Before
   public void createWrapperInstance() {
     Environment testEnvironment = new Environment("api.example.com", "www.example.com", false);
-    mWrapper = new ApiWrapper("my_client_id", "my_client_secret", testEnvironment);
+    mWrapper = new ReadmillWrapper("my_client_id", "my_client_secret", testEnvironment);
   }
 
   @Test
