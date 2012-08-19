@@ -104,14 +104,16 @@ public class ReadmillWrapper {
   }
 
   protected Request authorizeRequest(Request request) {
-    // Include any available token
-    if(mToken != null && request.getToken() == null) {
-      request.usingToken(mToken);
+    if(request.getToken() != null) {
+      return request; // Already authenticated with token
     }
 
-    // Fall back to authorization with client id when missing a token
-    if(request.getToken() == null && mClientId != null) {
-      request.withParams("client_id", mClientId);
+    if(mToken != null) {
+      return request.usingToken(mToken); // Authenticate with wrapper token
+    }
+
+    if(mClientId != null) {
+      return request.withParams("client_id", mClientId); // Authenticate with client id
     }
 
     return request;
