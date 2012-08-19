@@ -87,39 +87,50 @@ URI authorizationUrl = wrapper.getAuthorizationUrl(myCallback);
  */
 wrapper.exchangeCodeForToken(myCode);
 
-/* Start building a request by calling wrapper.get(<base path>).
- * The base path is the path of the request (without the leading version: /v2 !).
- * You can also use .post(), .delete(), .put() or .head() for endpoints with other HTTP verbs.
+/*
+ * Start building a request by calling wrapper.get(<base path>). The base path
+ * is the path of the request (without the leading version: /v2 !). You can
+ * also use .post(), .delete(), .put() or .head() for endpoints with other HTTP
+ * verbs.
  */
 
 RequestBuilder builder = wrapper.get("/me");
 
-/* Finish building a request by calling .json(). This sends the request to the server
- * and parses the result as a JSON object.
- * All responses from Readmill are wrapped in a key that determines the type of the object.
- * For example, the /me endpoint returns a user (the user for the current token), and the json
- * then loooks like this: { "user": { <the actual user data> } }
- * If you pass in a string the the .json() call, the wrapper will unwrap the response and return the
- * actual user data directly.
+/*
+ * Finish building a request by calling .json(). This sends the request to the
+ * server and parses the result as a JSON object.
+ *
+ * All responses from Readmill are wrapped in a key that determines the type of
+ * the object. For example, the /me endpoint returns a user (the user for the
+ * current token), and the json then loooks like this:
+ *
+ * { "user": { <the actual user data> } }
+ *
+ * If you pass in a string the the .json() call, the wrapper will unwrap the
+ * response and return the actual user data directly.
  */
 
 JSONObject me = builder.json("user");
 
-/* For more fluent request building you can of course skip assigning a RequestBuilder and go
- * directly from the wrapper .get() to the .json() call:
+/*
+ * For more fluent request building you can of course skip assigning a
+ * RequestBuilder and go directly from the wrapper .get() to the .json() call:
  * JSONObject me = wrapper.get("/me").json("user");
-
- * RequestBuilders are chainable, so you can construct complex queries by chaining on multiple parameter
- * setters in a row, and then finalize the request by calling .json().
+ *
+ * RequestBuilders are chainable, so you can construct complex queries by
+ * chaining on multiple parameter setters in a row, and then finalize the
+ * request by calling .json().
  */
 
 builder = wrapper.get("/users/" + me.getInt("id") + "/readings");
 
 builder = builder.order("created_at").from("2012-08-20T13:37:00Z").count(50);
 
-/* The Readmill API is consistent about wrapping objects under their type, even for collections.
- * All collections are wrapped under the key: "items", and each object in the collection is individually.
- * wrapped by its type.
+/*
+ * The Readmill API is consistent about wrapping objects under their type,
+ * even for collections. All collections are wrapped under the key: "items",
+ * and each object in the collection is individually wrapped by its type.
+ *
  * For example:
  * {
  *  "items": [ { "reading" { <reading data> } }, ... ]
@@ -128,8 +139,8 @@ builder = builder.order("created_at").from("2012-08-20T13:37:00Z").count(50);
  * The wrapper provdes jsonItems() as a convenience to unwrap the "items" object.
  * .jsonItems() => [ { "reading" { <reading data> } }, ... ]
  *
- * and the jsonItems(<string>) which unwraps each item in a collection (which, of course, only works
- * when all the items are the same type.
+ * and the jsonItems(<string>) which unwraps each item in a collection (which,
+ * of course, only works when all the items are the same type.
  *
  * .jsonItems("reading") => [ { <reading data> }, ... ]
  */
@@ -139,8 +150,8 @@ JSONArray readings = builder.jsonItems("reading");
 JSONObject firstReading = readings.getJSONObject(i);
 
 /*
- * You can use the request builder to build all types of requests.
- * So we conclude this breakdown by finishing the book and submit a closing remark.
+ * You can use the request builder to build all types of requests. So we
+ * conclude this breakdown by finishing the book and submit a closing remark.
  */
 
 firstReading = wrapper.put("/readings/" + firstReading.getInt("id")).
