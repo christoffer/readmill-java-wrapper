@@ -73,20 +73,20 @@ public class ReadmillWrapper {
     return mHttpClient;
   }
 
-  public HttpResponse get(Request request) {
-    return execute(request, HttpGet.class);
+  public RequestBuilder get(String uri) {
+    return new RequestBuilder(this, HttpGet.class, uri);
   }
 
-  public HttpResponse post(Request request) {
-    return execute(request, HttpPost.class);
+  public RequestBuilder post(String uri) {
+    return new RequestBuilder(this, HttpPost.class, uri);
   }
 
-  public HttpResponse delete(Request request) {
-    return execute(request, HttpDelete.class);
+  public RequestBuilder delete(String uri) {
+    return new RequestBuilder(this, HttpDelete.class, uri);
   }
 
-  public HttpResponse put(Request request) {
-    return execute(request, HttpPut.class);
+  public RequestBuilder put(String uri) {
+    return new RequestBuilder(this, HttpPut.class, uri);
   }
 
   /**
