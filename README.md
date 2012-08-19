@@ -34,13 +34,16 @@ For authenticated requests you need to obtain an access token.
   wrapper.delete("/readings/" + reading.getInt("id")).json();
 ```
 
-For more detailed control you can use manual request building:
+Or if you prefer to build the requests yourself:
 
 ```java
   ReadmillWrapper wrapper = new ReadmillWrapper("my_client_id", "my_client_secret", Environment.LIVE);
 
-  Token myAccessToken = getAnOAuthTokenSomehow();
+  Token userToken = currentUserTokenForMyMultiUserApp();
 
-  Request updateReadingState = Request.to("/readings/" + 77).withParams("state", "finished").usingToken(myAccessToken);
-  HTTPResponse response = wrapper.put(request);
+  Request updateReadingState = Request.to("/readings/" + 77).
+                                 withParams("state", "finished", "reading[via]", 1).
+                                 usingToken(userToken);
+
+  HTTPResponse response = wrapper.put(updateReadingState).request(); // .json() etc are also available here
 ```
