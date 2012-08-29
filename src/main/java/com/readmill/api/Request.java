@@ -9,6 +9,7 @@ import org.apache.http.message.BasicNameValuePair;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +40,7 @@ public class Request {
   }
 
   public Request(String resource, Object... args) {
-    if (args != null && args.length > 0) {
+    if(args != null && args.length > 0) {
       resource = String.format(resource, args);
     }
     mResource = resource;
@@ -54,10 +55,10 @@ public class Request {
    * @return this
    */
   public Request withParams(Object... args) {
-    if (args != null) {
-      if (args.length % 2 != 0)
+    if(args != null) {
+      if(args.length % 2 != 0)
         throw new IllegalArgumentException("need an even number of arguments");
-      for (int i = 0; i < args.length; i += 2) {
+      for(int i = 0; i < args.length; i += 2) {
         String key = args[i].toString();
         String value = String.valueOf(args[i + 1]);
         params.add(new BasicNameValuePair(key, value));
@@ -79,6 +80,7 @@ public class Request {
 
   /**
    * Return the current token for this request.
+   *
    * @return Request token or null
    */
   public Token getToken() {
@@ -112,11 +114,11 @@ public class Request {
       attachParams(request);
       authorizeRequest(request);
       return request;
-    } catch (InstantiationException e) {
+    } catch(InstantiationException e) {
       throw new RuntimeException(e);
-    } catch (IllegalAccessException e) {
+    } catch(IllegalAccessException e) {
       throw new RuntimeException(e);
-    } catch (UnsupportedEncodingException e) {
+    } catch(UnsupportedEncodingException e) {
       throw new RuntimeException(e);
     }
   }
@@ -134,12 +136,14 @@ public class Request {
     return toUrl().hashCode();
   }
 
-  /** Private **/
+  /**
+   * Private *
+   */
 
   private void attachParams(HttpRequestBase request) throws UnsupportedEncodingException {
-    if (request instanceof HttpEntityEnclosingRequestBase) {
+    if(request instanceof HttpEntityEnclosingRequestBase) {
       HttpEntityEnclosingRequestBase enclosingRequest = (HttpEntityEnclosingRequestBase) request;
-      if (!params.isEmpty()) {
+      if(!params.isEmpty()) {
         request.setHeader("Content-Type", "application/x-www-form-urlencoded");
         enclosingRequest.setEntity(new StringEntity(queryString()));
       }
@@ -150,7 +154,7 @@ public class Request {
   }
 
   private void authorizeRequest(HttpRequest request) {
-    if (mToken != null && mToken.isValid()) {
+    if(mToken != null && mToken.isValid()) {
       request.setHeader("Authorization", String.format("OAuth %s", mToken.getAccessToken()));
     }
   }
