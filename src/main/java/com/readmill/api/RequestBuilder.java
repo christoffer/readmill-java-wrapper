@@ -29,11 +29,11 @@ public class RequestBuilder {
   }
 
   public JSONArray jsonItems() {
-    return json().optJSONArray("items");
+    return fetch().optJSONArray("items");
   }
 
   public JSONArray jsonItems(String unwrapKey) {
-    JSONArray items = json().optJSONArray("items");
+    JSONArray items = fetch().optJSONArray("items");
     if(items == null || items.length() == 0) {
       return new JSONArray();
     }
@@ -51,35 +51,37 @@ public class RequestBuilder {
     return new JSONArray(unwrapped);
   }
 
-  public JSONObject json(String key) {
-    return json().optJSONObject(key);
-  }
-
   /**
    * Performs the request and returns the parsed JSON object.
    */
-  public JSONObject json() {
+  public JSONObject fetch() {
     try {
       String responseText = getResponseText();
       return new JSONObject(responseText);
     } catch(JSONException e) {
       e.printStackTrace();
       return new JSONObject();
-    }
-  }
-
-  public String getResponseText() {
-    try {
-      HttpResponse response = sendRequest();
-      HttpEntity entity = response.getEntity();
-      return EntityUtils.toString(entity);
     } catch(IOException e) {
       e.printStackTrace();
-      return "";
+      return new JSONObject();
     }
   }
 
-  public HttpResponse sendRequest() {
+  public JSONObject fetch(String key) {
+    return fetch().optJSONObject(key);
+  }
+
+  public void send() throws IOException {
+    sendRequest();
+  }
+
+  public String getResponseText() throws IOException {
+    HttpResponse response = sendRequest();
+    HttpEntity entity = response.getEntity();
+    return EntityUtils.toString(entity);
+  }
+
+  public HttpResponse sendRequest() throws IOException {
     return mWrapper.execute(mRequest, mRequestBaseClass);
   }
 

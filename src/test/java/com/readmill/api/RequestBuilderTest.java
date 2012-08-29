@@ -8,6 +8,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import java.io.IOException;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
@@ -35,21 +37,21 @@ public class RequestBuilderTest {
   }
 
   @Test
-  public void json() throws JSONException {
+  public void json() throws JSONException, IOException {
     JSONObject user = new JSONObject("{ \"user\": { \"username\": \"christoffer\", id: 1 } }");
-    JSONObject json = builderWithStubbedResponseText(user.toString()).json();
+    JSONObject json = builderWithStubbedResponseText(user.toString()).fetch();
     assertThat(json.toString(), is(user.toString()));
   }
 
   @Test
-  public void jsonUnwrap() throws JSONException {
+  public void jsonUnwrap() throws JSONException, IOException {
     JSONObject user = new JSONObject("{ \"user\": { \"username\": \"christoffer\", id: 1 } }");
-    JSONObject json = builderWithStubbedResponseText(user.toString()).json("user");
+    JSONObject json = builderWithStubbedResponseText(user.toString()).fetch("user");
     assertThat(json.toString(), is(user.optJSONObject("user").toString()));
   }
 
   @Test
-  public void jsonItems() throws JSONException  {
+  public void jsonItems() throws JSONException, IOException {
     JSONObject userOne = new JSONObject("{ \"user\": { \"username\": \"christoffer\", id: 1 } }");
     JSONObject userTwo = new JSONObject("{ \"user\": { \"username\": \"niki\", id: 387 } }");
 
@@ -65,7 +67,7 @@ public class RequestBuilderTest {
   }
 
   @Test
-  public void jsonItemsUnwrap() throws JSONException  {
+  public void jsonItemsUnwrap() throws JSONException, IOException {
     JSONObject userOne = new JSONObject("{ \"user\": { \"username\": \"christoffer\", id: 1 } }");
     JSONObject userTwo = new JSONObject("{ \"user\": { \"username\": \"niki\", id: 387 } }");
 
@@ -82,10 +84,9 @@ public class RequestBuilderTest {
 
   /** Private helpers **/
 
-  private RequestBuilder builderWithStubbedResponseText(String jsonText) throws JSONException {
-    JSONObject user = new JSONObject(jsonText);
+  private RequestBuilder builderWithStubbedResponseText(String jsonText) throws JSONException, IOException {
     RequestBuilder builder = Mockito.spy(instance);
-    Mockito.doReturn(user.toString()).when(builder).getResponseText();
+    Mockito.doReturn(jsonText).when(builder).getResponseText();
     return builder;
   }
 }
