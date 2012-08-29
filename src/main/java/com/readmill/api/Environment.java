@@ -39,4 +39,12 @@ public class Environment {
   }
 
   public static final Environment Live = new Environment("api.readmill.com", "m.readmill.com", true);
+
+  public String getApiUrl() {
+    return mApiHost.toString();
+  }
+
+  public String getWebUrl() {
+    return mWebHost.toString();
+  }
 }
