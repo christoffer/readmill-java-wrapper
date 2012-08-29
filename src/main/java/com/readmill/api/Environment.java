@@ -4,7 +4,7 @@ import org.apache.http.HttpHost;
 
 @SuppressWarnings("UnusedDeclaration")
 public class Environment {
-  private final HttpHost mApiHost, mLoginHost;
+  private final HttpHost mApiHost, mWebHost;
 
   /**
    * Create an environment for a Api Wrapper.
@@ -20,14 +20,14 @@ public class Environment {
    * Create an environment for a Api Wrapper.
    * @param apiHost Host to send requests to
    * @param apiPort Port of api host
-   * @param loginHost Host where users can log in to the service
-   * @param loginPort Port of login host
+   * @param webHost Host where users can log in to the service
+   * @param webPort Port of login host
    * @param useSSL use secure connections or not
    */
-  public Environment(String apiHost, int apiPort, String loginHost, int loginPort, boolean useSSL) {
+  public Environment(String apiHost, int apiPort, String webHost, int webPort, boolean useSSL) {
     String scheme = useSSL ? "https" : "http";
     mApiHost = new HttpHost(apiHost, apiPort, scheme);
-    mLoginHost = new HttpHost(loginHost, loginPort, scheme);
+    mWebHost = new HttpHost(webHost, webPort, scheme);
   }
 
   public HttpHost getApiHost() {
@@ -35,7 +35,7 @@ public class Environment {
   }
 
   public HttpHost getWebHost() {
-    return mLoginHost;
+    return mWebHost;
   }
 
   public static final Environment Live = new Environment("api.readmill.com", "m.readmill.com", true);
