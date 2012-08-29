@@ -47,15 +47,11 @@ public class Token implements Serializable {
    * @param json JSON response
    * @throws IOException When given an invalid JSON object
    */
-  public Token(JSONObject json) throws IOException {
-    try {
-      accessToken = json.getString(KEY_ACCESS_TOKEN);
-      refreshToken = json.getString(KEY_REFRESH_TOKEN);
-      scope = json.getString(KEY_SCOPE);
-      expiresIn = json.getLong(KEY_EXPIRES_IN);
-    } catch(JSONException e) {
-      throw new IOException(e.getMessage(), e);
-    }
+  public Token(JSONObject json) throws JSONException {
+    accessToken = json.getString(KEY_ACCESS_TOKEN);
+    refreshToken = json.getString(KEY_REFRESH_TOKEN);
+    scope = json.getString(KEY_SCOPE);
+    expiresIn = json.getLong(KEY_EXPIRES_IN);
   }
 
   /**
