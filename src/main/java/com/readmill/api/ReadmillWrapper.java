@@ -85,8 +85,10 @@ public class ReadmillWrapper {
       throw new RuntimeException("Redirect URI must be set before calling obtainToken()");
     }
 
-    Request obtainRequest = Request.to(mEnvironment.getWebHost().toURI()).withParams(
-      "grant_type", "code",
+    String resourceUrl = String.format("%s/oauth/token", mEnvironment.getWebHost());
+
+    Request obtainRequest = Request.to(resourceUrl).withParams(
+      "grant_type", "authorization_code",
       "client_id", mClientId,
       "client_secret", mClientSecret,
       "code", authorizationCode,

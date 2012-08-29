@@ -1,10 +1,13 @@
 package com.readmill.api;
 
-import org.apache.http.*;
+import org.apache.http.Header;
+import org.apache.http.HttpHost;
+import org.apache.http.HttpRequest;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.util.EntityUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -128,9 +131,7 @@ public class ReadmillWrapperTest {
   }
 
   @Test
-  public void obtainToken() throws IOException {
-    HttpClient httpClient = stubbedHttpClient();
-    ArgumentCaptor<HttpPost> requestArgument = ArgumentCaptor.forClass(HttpPost.class);
+  public void obtainToken() throws IOException, JSONException {
 
     URI redirectURI = URI.create("http://wrappertest.com/callback");
     mWrapper.setRedirectURI(redirectURI);
@@ -142,17 +143,17 @@ public class ReadmillWrapperTest {
         "\"refresh_token\": \"04u7h-r3fr35h-70k3n\"\n" +
         "}";
 
-    stubOutRequestResponse(httpClient, tokenJSON);
+    ArgumentCaptor<Request> requestArgument = ArgumentCaptor.forClass(Request.class);
+    mWrapper = Mockito.spy(mWrapper);
+    Mockito.doReturn(tokenJSON).when(mWrapper).getResponseText(requestArgument.capture(), Mockito.eq(HttpPost.class));
 
     Token obtainedToken = mWrapper.obtainToken("authcode2000");
 
-    Mockito.verify(httpClient).execute(Mockito.any(HttpHost.class), requestArgument.capture());
-
-    URI sentRequest = requestArgument.getValue().getURI();
+    URI sentRequest = URI.create(requestArgument.getValue().toUrl());
 
     // Assert that request was sent to correct place
     assertThat(sentRequest.toString(), startsWith("https://www.example.com"));
-    assertThat(sentRequest.getPath(), is("oauth/token"));
+    assertThat(sentRequest.getPath(), is("/oauth/token"));
 
     // ... with correct parameters
     assertThat(sentRequest.getQuery(), containsString("grant_type=authorization_code"));
@@ -162,10 +163,9 @@ public class ReadmillWrapperTest {
     assertThat(sentRequest.getQuery(), containsString("redirect_uri=http://wrappertest.com/callback"));
 
     // ... and got correct token
-    assertThat(obtainedToken.getAccessToken(), is("04u7h-4cc355-70k3n"));
-    assertThat(obtainedToken.getExpiresIn(), is(3600L));
-    assertThat(obtainedToken.getScope(), is(""));
-    assertThat(obtainedToken.getAccessToken(), is("04u7h-r3fr35h-70k3n"));
+    Token expectedToken = new Token(new JSONObject(tokenJSON));
+
+    assertThat(obtainedToken, equalTo(expectedToken));
   }
 
   // Helpers
@@ -175,19 +175,6 @@ public class ReadmillWrapperTest {
     mWrapper = Mockito.spy(mWrapper);
     Mockito.when(mWrapper.getHttpClient()).thenReturn(httpClient);
     return httpClient;
-  }
-
-  /**
-   * Make a http client return a given string as response.
-   *
-   * @param httpClient Client to stub
-   * @param responseText Text to return
-   */
-  private void stubOutRequestResponse(HttpClient httpClient, String responseText) throws IOException {
-    HttpResponse mockResponse = Mockito.mock(HttpResponse.class);
-    HttpEntity mockEntity = Mockito.mock(HttpEntity.class);
-    Mockito.when(mockResponse.getEntity()).thenReturn(mockEntity);
-    Mockito.when(httpClient.execute(Mockito.any(HttpHost.class), Mockito.any(HttpRequest.class))).thenReturn(mockResponse);
   }
 
   // Pull out a header from a captured http request argument
