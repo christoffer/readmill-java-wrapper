@@ -77,6 +77,11 @@ public class RequestTest {
   }
 
   @Test
+  public void toUrlWithAbsoluteResource() {
+    assertThat(Request.to("http://readmill.com/users").toUrl(), is("http://readmill.com/users"));
+  }
+
+  @Test
   public void queryString() {
     assertThat(Request.to("/users").queryString(), is(""));
     assertThat(Request.to("/users").withParams("user[username]", "christoffer", "private", false).queryString(), is("user%5Busername%5D=christoffer&private=false"));

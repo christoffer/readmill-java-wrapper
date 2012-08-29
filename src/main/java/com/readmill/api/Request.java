@@ -161,6 +161,12 @@ public class Request {
 
   private String getResource() {
     if(mResource != null) {
+      try {
+        URI resourceUri = new URI(mResource);
+        if(resourceUri.isAbsolute()) {
+          return mResource;
+        }
+      } catch(URISyntaxException ignored) {}
       return (mResource.startsWith("/") ? "/v2" : "/v2/") + mResource;
     }
     return mResource;
