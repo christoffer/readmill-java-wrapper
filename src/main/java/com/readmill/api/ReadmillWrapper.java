@@ -12,9 +12,13 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URL;
 
 public class ReadmillWrapper {
   private String mClientId;
@@ -22,6 +26,7 @@ public class ReadmillWrapper {
   private Environment mEnvironment;
   private Token mToken;
   private HttpClient mHttpClient;
+  private URI mRedirectURI;
 
   /**
    * Create a wrapper for a given client and environment.
@@ -55,6 +60,50 @@ public class ReadmillWrapper {
 
   public void setToken(Token token) {
     mToken = token;
+  }
+
+  public void setRedirectURI(URI redirectURI) {
+    mRedirectURI = redirectURI;
+  }
+
+  public URL getAuthorizationURL() {
+    if(mRedirectURI == null) {
+      throw new RuntimeException("Redirect URI must be set before calling getAuthorizationURL()");
+    }
+    try {
+      String template = "%s/oauth/authorize?response_type=code&client_id=%s&redirect_uri=%s";
+      String authorizeURL = String.format(template, mEnvironment.getWebHost().toURI(), mClientId, mRedirectURI.toString());
+      return URI.create(authorizeURL).toURL();
+    } catch(MalformedURLException e) {
+      e.printStackTrace();
+      return null;
+    }
+  }
+
+  public Token obtainToken(String authorizationCode) {
+    if(mRedirectURI == null) {
+      throw new RuntimeException("Redirect URI must be set before calling obtainToken()");
+    }
+
+    Request obtainRequest = Request.to(mEnvironment.getWebHost().toURI()).withParams(
+      "grant_type", "code",
+      "client_id", mClientId,
+      "client_secret", mClientSecret,
+      "code", authorizationCode,
+      "redirect_uri", mRedirectURI
+    );
+
+    try {
+      String tokenResponse = getResponseText(obtainRequest, HttpPost.class);
+      JSONObject tokenJson = new JSONObject(tokenResponse);
+      return new Token(tokenJson);
+    } catch(IOException e) {
+      e.printStackTrace();
+    } catch(JSONException e) {
+      e.printStackTrace();
+    }
+
+    return null;
   }
 
   public HttpClient getHttpClient() {
@@ -101,6 +150,11 @@ public class ReadmillWrapper {
       e.printStackTrace();
       return null;
     }
+  }
+
+  protected String getResponseText(Request request, Class<? extends HttpRequestBase> klass) throws IOException {
+    HttpResponse response = execute(request, klass);
+    return HttpUtils.getString(response);
   }
 
   protected Request authorizeRequest(Request request) {
