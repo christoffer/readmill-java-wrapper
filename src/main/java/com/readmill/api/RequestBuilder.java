@@ -133,13 +133,14 @@ public class RequestBuilder {
   // The time the comment was created. This is used to create comments after
   // they were posted.
   // Example value: 2012-02-27T12:45:02Z
-  public RequestBuilder commentPostedAt(Date value) {
-    return args("comment[posted_at]", toISO8601(value));
-  }
-
   public RequestBuilder commentPostedAt(String value) {
     return args("comment[posted_at]", value);
   }
+
+  public RequestBuilder commentPostedAt(Date value) {
+    return commentPostedAt(toISO8601(value));
+  }
+
 
   // The number of results to return. Default is 20, max 100.
   // Example value: 75
@@ -154,13 +155,14 @@ public class RequestBuilder {
 
   // Return results using a date to select a range.
   // Example value: 2012-02-27T12:45:02Z
-  public RequestBuilder from(Date value) {
-    return args("from", toISO8601(value));
-  }
-
   public RequestBuilder from(String value) {
     return args("from", value);
   }
+
+  public RequestBuilder from(Date value) {
+    return from(toISO8601(value));
+  }
+
 
   // The content of the highlight.
   // Example value: A great highlight
@@ -170,17 +172,18 @@ public class RequestBuilder {
 
   // The time the highlight was created by the user.
   // Example value: 2012-02-27T12:45:02Z
-  public RequestBuilder highlightHighlightedAt(Date value) {
-    return args("highlight[highlighted_at]", toISO8601(value));
-  }
-
   public RequestBuilder highlightHighlightedAt(String value) {
     return args("highlight[highlighted_at]", value);
   }
 
+  public RequestBuilder highlightHighlightedAt(Date value) {
+    return highlightHighlightedAt(toISO8601(value));
+  }
+
+
   // Locators are used to determine the exact location of the highlight in a
-  // larger piece of text. This is a custom JSON structure that contains a few
-  // different data points.
+  // larger piece of text. They are defined with a custom JSON structure that
+  // contains a few different data points.
   //
   // <a href="/api/docs/v2/locators.html">More on locators here</a>.
   //
@@ -254,12 +257,12 @@ public class RequestBuilder {
 
   // When the session occurred.
   // Example value: 2012-02-27T12:45:02Z
-  public RequestBuilder pingOccurredAt(Date value) {
-    return args("ping[occurred_at]", toISO8601(value));
-  }
-
   public RequestBuilder pingOccurredAt(String value) {
     return args("ping[occurred_at]", value);
+  }
+
+  public RequestBuilder pingOccurredAt(Date value) {
+    return pingOccurredAt(toISO8601(value));
   }
 
   // The progress of the reading session. In percent, between <code>0.0</code>
@@ -310,13 +313,14 @@ public class RequestBuilder {
   // readings are added after they happened. This date can only be set if the
   // state of the reading is abandoned.
   // Example value: 2012-02-27T12:45:02Z
-  public RequestBuilder readingAbandonedAt(Date value) {
-    return args("reading[abandoned_at]", toISO8601(value));
-  }
-
   public RequestBuilder readingAbandonedAt(String value) {
     return args("reading[abandoned_at]", value);
   }
+
+  public RequestBuilder readingAbandonedAt(Date value) {
+    return readingAbandonedAt(toISO8601(value));
+  }
+
 
   // A closing remark of the book. Only visible if book is finished or
   // abandoned.
@@ -329,12 +333,12 @@ public class RequestBuilder {
   // readings are added after they happened. This parameter can only be used if
   // the state of the reading is finished.
   // Example value: 2012-02-27T12:45:02Z
-  public RequestBuilder readingFinishedAt(Date value) {
-    return args("reading[finished_at]", toISO8601(value));
-  }
-
   public RequestBuilder readingFinishedAt(String value) {
     return args("reading[finished_at]", value);
+  }
+
+  public RequestBuilder readingFinishedAt(Date value) {
+    return readingFinishedAt(toISO8601(value));
   }
 
   // Flag to indicate if the reading is private or public.
@@ -352,13 +356,14 @@ public class RequestBuilder {
   // are added after they happened. This parameter can only be used if the state
   // of the reading is reading.
   // Example value: 2012-02-27T12:45:02Z
-  public RequestBuilder readingStartedAt(Date value) {
-    return args("reading[started_at]", toISO8601(value));
-  }
-
   public RequestBuilder readingStartedAt(String value) {
     return args("reading[started_at]", value);
   }
+
+  public RequestBuilder readingStartedAt(Date value) {
+    return readingStartedAt(toISO8601(value));
+  }
+
 
   // If the reading was recommended by another user you can credit them by
   // including their user id.
