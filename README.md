@@ -19,7 +19,7 @@ Example usage:
   user.optString("username"); // => "christoffer"
 
   JSONArray readings = wrapper.get("/users/1/readings").
-               order("created_at").from("2012-08-13:37:00Z").
+               order("created_at").from("2012-08-01T13:37:00Z").
                count(50).
                fetchItems("reading") // returns an array of readings
 ```
