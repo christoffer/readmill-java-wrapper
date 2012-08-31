@@ -20,6 +20,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 
+@SuppressWarnings("UnusedDeclaration")
 public class ReadmillWrapper {
   private String mClientId;
   private String mClientSecret;
@@ -67,12 +68,21 @@ public class ReadmillWrapper {
   }
 
   public URL getAuthorizationURL() {
+    return getAuthorizationURL(null);
+  }
+
+  public URL getAuthorizationURL(String scope) {
     if(mRedirectURI == null) {
       throw new RuntimeException("Redirect URI must be set before calling getAuthorizationURL()");
     }
     try {
       String template = "%s/oauth/authorize?response_type=code&client_id=%s&redirect_uri=%s";
       String authorizeURL = String.format(template, mEnvironment.getWebHost().toURI(), mClientId, mRedirectURI.toString());
+
+      if(scope != null) {
+        authorizeURL += "&scope=" + scope;
+      }
+
       return URI.create(authorizeURL).toURL();
     } catch(MalformedURLException e) {
       e.printStackTrace();
@@ -81,6 +91,10 @@ public class ReadmillWrapper {
   }
 
   public Token obtainToken(String authorizationCode) {
+    return obtainToken(authorizationCode, null);
+  }
+
+  public Token obtainToken(String authorizationCode, String scope) {
     if(mRedirectURI == null) {
       throw new RuntimeException("Redirect URI must be set before calling obtainToken()");
     }
@@ -88,12 +102,16 @@ public class ReadmillWrapper {
     String resourceUrl = String.format("%s/oauth/token", mEnvironment.getWebHost());
 
     Request obtainRequest = Request.to(resourceUrl).withParams(
-      "grant_type", "authorization_code",
-      "client_id", mClientId,
-      "client_secret", mClientSecret,
-      "code", authorizationCode,
-      "redirect_uri", mRedirectURI
+        "grant_type", "authorization_code",
+        "client_id", mClientId,
+        "client_secret", mClientSecret,
+        "code", authorizationCode,
+        "redirect_uri", mRedirectURI
     );
+
+    if(scope != null) {
+      obtainRequest.withParams("scope", scope);
+    }
 
     try {
       String tokenResponse = getResponseText(obtainRequest, HttpPost.class);
@@ -104,7 +122,6 @@ public class ReadmillWrapper {
     } catch(JSONException e) {
       e.printStackTrace();
     }
-
     return null;
   }
 
@@ -140,8 +157,8 @@ public class ReadmillWrapper {
     return new RequestBuilder(this, HttpPut.class, uri);
   }
 
-  /**
-   * Protected *
+  /*
+   * Protected
    */
 
   protected HttpResponse execute(Request request, Class<? extends HttpRequestBase> klass) {
@@ -175,12 +192,13 @@ public class ReadmillWrapper {
     return request;
   }
 
-  /**
-   * Private *
+  /*
+   * Private
    */
 
   private HttpHost resolveTarget(Request request) {
     URI uri = URI.create(mEnvironment.getApiHost().toURI()).resolve(request.toUrl());
     return new HttpHost(uri.getHost(), uri.getPort(), uri.getScheme());
   }
+
 }
