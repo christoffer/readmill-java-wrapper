@@ -21,9 +21,12 @@ public class RequestBuilder {
   private Request mRequest;
   private Class<? extends HttpRequestBase> mRequestBaseClass;
 
-  private final SimpleDateFormat iso8601Format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+  private final String ISO8601 = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+  private final SimpleDateFormat iso8601Format = new SimpleDateFormat(ISO8601);
 
-  public <T extends HttpRequestBase> RequestBuilder(ReadmillWrapper wrapper, Class<T> requestBaseClass, String baseURI) {
+  public <T extends HttpRequestBase> RequestBuilder(ReadmillWrapper wrapper,
+                                                    Class<T> requestBaseClass,
+                                                    String baseURI) {
     iso8601Format.setTimeZone(TimeZone.getTimeZone("UTC"));
     mWrapper = wrapper;
     mRequest = Request.to(baseURI);
@@ -107,7 +110,9 @@ public class RequestBuilder {
     return args("book[author]", value);
   }
 
-  // A unique identifier of the book. It is currently validated as an ISBN, though were are looking into opening up to more generic identifiers like URLs or any arbitrary string.
+  // A unique identifier of the book. It is currently validated as an ISBN,
+  // though were are looking into opening up to more generic identifiers like
+  // URLs or any arbitrary string.
   // Example value: 0070162816
   public RequestBuilder bookIdentifier(String value) {
     return args("book[identifier]", value);
@@ -125,7 +130,8 @@ public class RequestBuilder {
     return args("comment[content]", value);
   }
 
-  // The time the comment was created. This is used to create comments after they were posted.
+  // The time the comment was created. This is used to create comments after
+  // they were posted.
   // Example value: 2012-02-27T12:45:02Z
   public RequestBuilder commentPostedAt(Date value) {
     return args("comment[posted_at]", toISO8601(value));
@@ -205,7 +211,9 @@ public class RequestBuilder {
     return args("highlights_count[to]", value);
   }
 
-  // A unique identifier of the book. It is currently validated as an ISBN, though were are looking into opening up to more generic identifiers like URLs or any arbitrary string.
+  // A unique identifier of the book. It is currently validated as an ISBN,
+  // though were are looking into opening up to more generic identifiers like
+  // URLs or any arbitrary string.
   // Example value: 0070162816
   public RequestBuilder identifier(String value) {
     return args("identifier", value);
@@ -223,7 +231,10 @@ public class RequestBuilder {
     return args("ping[duration]", value);
   }
 
-  // A unique identifier that is used to group pings together to the same period when processed. In Readmill for iPad we define this identifier to change every time the user has been idle for more than 1 hour. That is when there has been more than 1 hour since the last ping.
+  // A unique identifier that is used to group pings together to the same period
+  // when processed. In Readmill for iPad we define this identifier to change
+  // every time the user has been idle for more than 1 hour. That is when there
+  // has been more than 1 hour since the last ping.
   // Example value: ae45ba88ec
   public RequestBuilder pingIdentifier(String value) {
     return args("ping[identifier]", value);
@@ -251,7 +262,8 @@ public class RequestBuilder {
     return args("ping[occurred_at]", value);
   }
 
-  // The progress of the reading session. In percent, between <code>0.0</code> and <code>1.0</code>.
+  // The progress of the reading session. In percent, between <code>0.0</code>
+  // and <code>1.0</code>.
   // Example value: 0.25
   public RequestBuilder pingProgress(Double value) {
     return args("ping[progress]", value);
@@ -294,7 +306,9 @@ public class RequestBuilder {
     return args("query", value);
   }
 
-  // Date which says when this reading was abandoned. Mainly for use when readings are added after they happened. This date can only be set if the state of the reading is abandoned.
+  // Date which says when this reading was abandoned. Mainly for use when
+  // readings are added after they happened. This date can only be set if the
+  // state of the reading is abandoned.
   // Example value: 2012-02-27T12:45:02Z
   public RequestBuilder readingAbandonedAt(Date value) {
     return args("reading[abandoned_at]", toISO8601(value));
@@ -304,13 +318,16 @@ public class RequestBuilder {
     return args("reading[abandoned_at]", value);
   }
 
-  // A closing remark of the book. Only visible if book is finished or abandoned.
+  // A closing remark of the book. Only visible if book is finished or
+  // abandoned.
   // Example value: This was truly a great read
   public RequestBuilder readingClosingRemark(String value) {
     return args("reading[closing_remark]", value);
   }
 
-  // Date which says when this reading was finished. Mainly for use when readings are added after they happened. This parameter can only be used if the state of the reading is finished.
+  // Date which says when this reading was finished. Mainly for use when
+  // readings are added after they happened. This parameter can only be used if
+  // the state of the reading is finished.
   // Example value: 2012-02-27T12:45:02Z
   public RequestBuilder readingFinishedAt(Date value) {
     return args("reading[finished_at]", toISO8601(value));
@@ -331,7 +348,9 @@ public class RequestBuilder {
     return args("reading[recommended]", value ? "true" : "false");
   }
 
-  // Date which says when this reading was started. Mainly for use when readings are added after they happened. This parameter can only be used if the state of the reading is reading.
+  // Date which says when this reading was started. Mainly for use when readings
+  // are added after they happened. This parameter can only be used if the state
+  // of the reading is reading.
   // Example value: 2012-02-27T12:45:02Z
   public RequestBuilder readingStartedAt(Date value) {
     return args("reading[started_at]", toISO8601(value));
@@ -341,7 +360,8 @@ public class RequestBuilder {
     return args("reading[started_at]", value);
   }
 
-  // If the reading was recommended by another user you can credit them by including their user id.
+  // If the reading was recommended by another user you can credit them by
+  // including their user id.
   // Example value: 9
   public RequestBuilder readingViaId(Integer value) {
     return args("reading[via_id]", value);
@@ -353,7 +373,8 @@ public class RequestBuilder {
     return args("size", value);
   }
 
-  // Only return readings that are in certain states. Accepts a comma separated list.
+  // Only return readings that are in certain states. Accepts a comma separated
+  // list.
   // Valid values: interesting, reading, finished, abandoned
   public RequestBuilder states(String value) {
     return args("states", value);
@@ -371,7 +392,8 @@ public class RequestBuilder {
     return args("title", value);
   }
 
-  // Return results using a date to select a range. This parameter is non-inclusive.
+  // Return results using a date to select a range. This parameter is
+  // non-inclusive.
   // Example value: 2012-02-29T12:45:02Z
   public RequestBuilder to(String value) {
     return args("to", value);
