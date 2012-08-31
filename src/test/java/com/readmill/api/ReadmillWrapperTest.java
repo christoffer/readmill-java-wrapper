@@ -128,11 +128,20 @@ public class ReadmillWrapperTest {
     assertThat(authorizeURL.getQuery(), containsString("redirect_uri=" + redirectURI));
     assertThat(authorizeURL.getQuery(), containsString("response_type=code"));
     assertThat(authorizeURL.getQuery(), containsString("response_type=code"));
+    assertThat(authorizeURL.getQuery(), not(containsString("scope=")));
+  }
+
+  @Test
+  public void getAuthorizationURLWithScope() throws MalformedURLException {
+    URI redirectURI = URI.create("http://wrappertest.com/callback");
+    mWrapper.setRedirectURI(redirectURI);
+    URL authorizeURL = mWrapper.getAuthorizationURL("non-expiring");
+
+    assertThat(authorizeURL.getQuery(), containsString("scope=non-expiring"));
   }
 
   @Test
   public void obtainToken() throws IOException, JSONException {
-
     URI redirectURI = URI.create("http://wrappertest.com/callback");
     mWrapper.setRedirectURI(redirectURI);
 
@@ -161,11 +170,33 @@ public class ReadmillWrapperTest {
     assertThat(sentRequest.getQuery(), containsString("client_secret=my_client_secret"));
     assertThat(sentRequest.getQuery(), containsString("code=authcode2000"));
     assertThat(sentRequest.getQuery(), containsString("redirect_uri=http://wrappertest.com/callback"));
+    assertThat(sentRequest.getQuery(), not(containsString("scope=")));
 
     // ... and got correct token
     Token expectedToken = new Token(new JSONObject(tokenJSON));
 
     assertThat(obtainedToken, equalTo(expectedToken));
+  }
+
+  @Test
+  public void obtainTokenWithScope() throws IOException, JSONException {
+    String tokenJSON = "{\n" +
+        "\"access_token\":  \"04u7h-4cc355-70k3n\",\n" +
+        "\"expires_in\":    3600,\n" +
+        "\"scope\":         \"\",\n" +
+        "\"refresh_token\": \"04u7h-r3fr35h-70k3n\"\n" +
+        "}";
+
+    URI redirectURI = URI.create("http://wrappertest.com/callback");
+    mWrapper.setRedirectURI(redirectURI);
+    ArgumentCaptor<Request> requestArgument = ArgumentCaptor.forClass(Request.class);
+    mWrapper = Mockito.spy(mWrapper);
+    Mockito.doReturn(tokenJSON).when(mWrapper).getResponseText(requestArgument.capture(), Mockito.eq(HttpPost.class));
+
+    mWrapper.obtainToken("my-code", "non-expiring");
+
+    URI sentRequest = URI.create(requestArgument.getValue().toUrl());
+    assertThat(sentRequest.getQuery(), containsString("scope=non-expiring"));
   }
 
   // Helpers
