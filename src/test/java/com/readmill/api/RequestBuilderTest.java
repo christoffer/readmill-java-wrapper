@@ -61,7 +61,7 @@ public class RequestBuilderTest {
     usersWithoutRoot.put(userOne);
     usersWithoutRoot.put(userTwo);
 
-    JSONArray json = builderWithStubbedResponseText(usersWrapped.toString()).jsonItems();
+    JSONArray json = builderWithStubbedResponseText(usersWrapped.toString()).fetchItems();
 
     assertThat(json.toString(), is(usersWithoutRoot.toString()));
   }
@@ -77,12 +77,12 @@ public class RequestBuilderTest {
     usersUnwrapped.put(userOne.getJSONObject("user"));
     usersUnwrapped.put(userTwo.getJSONObject("user"));
 
-    JSONArray json = builderWithStubbedResponseText(usersWrapped.toString()).jsonItems("user");
+    JSONArray json = builderWithStubbedResponseText(usersWrapped.toString()).fetchItems("user");
 
     assertThat(json.toString(), is(usersUnwrapped.toString()));
   }
 
-  /** Private helpers **/
+  /* Private helpers */
 
   private RequestBuilder builderWithStubbedResponseText(String jsonText) throws JSONException, IOException {
     RequestBuilder builder = Mockito.spy(instance);

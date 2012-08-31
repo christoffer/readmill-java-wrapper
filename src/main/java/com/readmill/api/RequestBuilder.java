@@ -37,29 +37,6 @@ public class RequestBuilder {
     return mRequest;
   }
 
-  public JSONArray jsonItems() {
-    return fetch().optJSONArray("items");
-  }
-
-  public JSONArray jsonItems(String unwrapKey) {
-    JSONArray items = fetch().optJSONArray("items");
-    if(items == null || items.length() == 0) {
-      return new JSONArray();
-    }
-
-    ArrayList<JSONObject> unwrapped = new ArrayList<JSONObject>(items.length());
-
-    try {
-      for(int i = 0; i < items.length(); i++) {
-        unwrapped.add(items.getJSONObject(i).getJSONObject(unwrapKey));
-      }
-    } catch(JSONException e) {
-      e.printStackTrace();
-      return new JSONArray();
-    }
-    return new JSONArray(unwrapped);
-  }
-
   /*
    * Performs the request and returns the parsed JSON object.
    */
@@ -80,6 +57,29 @@ public class RequestBuilder {
     return fetch().optJSONObject(key);
   }
 
+  public JSONArray fetchItems() {
+    return fetch().optJSONArray("items");
+  }
+
+  public JSONArray fetchItems(String unwrapKey) {
+    JSONArray items = fetch().optJSONArray("items");
+    if(items == null || items.length() == 0) {
+      return new JSONArray();
+    }
+
+    ArrayList<JSONObject> unwrapped = new ArrayList<JSONObject>(items.length());
+
+    try {
+      for(int i = 0; i < items.length(); i++) {
+        unwrapped.add(items.getJSONObject(i).getJSONObject(unwrapKey));
+      }
+    } catch(JSONException e) {
+      e.printStackTrace();
+      return new JSONArray();
+    }
+    return new JSONArray(unwrapped);
+  }
+
   public void send() throws IOException {
     sendRequest();
   }
@@ -88,10 +88,6 @@ public class RequestBuilder {
     HttpResponse response = sendRequest();
     HttpEntity entity = response.getEntity();
     return EntityUtils.toString(entity);
-  }
-
-  public HttpResponse sendRequest() throws IOException {
-    return mWrapper.execute(mRequest, mRequestBaseClass);
   }
 
   // ==================
@@ -407,6 +403,9 @@ public class RequestBuilder {
 
   // Helpers
 
+  private HttpResponse sendRequest() throws IOException {
+    return mWrapper.execute(mRequest, mRequestBaseClass);
+  }
 
   private RequestBuilder args(String key, String value) {
     mRequest.withParams(key, value);
