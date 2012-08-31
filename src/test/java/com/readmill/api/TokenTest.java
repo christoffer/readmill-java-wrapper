@@ -26,7 +26,7 @@ public class TokenTest {
     String validJson = "{\n" +
         "\"access_token\": \"04u7h-4cc355-70k3n\",\n" +
         "\"expires_in\": 3600,\n" +
-        "\"scope\": \"non-expiring\",\n" +
+        "\"scope\": \"default\",\n" +
         "\"refresh_token\": \"04u7h-r3fr35h-70k3n\"\n" +
         "}";
 
@@ -36,13 +36,30 @@ public class TokenTest {
 
     assertThat(token.getAccessToken(), is("04u7h-4cc355-70k3n"));
     assertThat(token.getRefreshToken(), is("04u7h-r3fr35h-70k3n"));
-    assertThat(token.getScope(), is("non-expiring"));
+    assertThat(token.getScope(), is("default"));
     assertThat(token.getExpiresIn(), is(3600L));
   }
 
   @Test
-      (expected = IOException.class)
-  public void throwsWhenConstructedFromInvalidJson() throws Exception {
+  public void constructFromJSONWithMissingRefreshToken() throws JSONException, IOException {
+    String validJson = "{\n" +
+        "\"access_token\": \"04u7h-4cc355-70k3n\",\n" +
+        "\"expires_in\": 3600,\n" +
+        "\"scope\": \"non-expiring\",\n" +
+        "}";
+
+    JSONTokener tokener = new JSONTokener(validJson);
+    JSONObject json = new JSONObject(tokener);
+    Token token = new Token(json);
+
+    assertThat(token.getAccessToken(), is("04u7h-4cc355-70k3n"));
+    assertThat(token.getRefreshToken(), is(""));
+    assertThat(token.getScope(), is("non-expiring"));
+    assertThat(token.getExpiresIn(), is(3600L));
+  }
+
+  @Test(expected = JSONException.class)
+  public void throwsWhenConstructedFromInvalidJsonObject() throws Exception {
     new Token(new JSONObject());
   }
 

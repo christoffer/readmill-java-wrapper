@@ -49,7 +49,7 @@ public class Token implements Serializable {
    */
   public Token(JSONObject json) throws JSONException {
     accessToken = json.getString(KEY_ACCESS_TOKEN);
-    refreshToken = json.getString(KEY_REFRESH_TOKEN);
+    refreshToken = json.optString(KEY_REFRESH_TOKEN); // refresh token is optional
     scope = json.getString(KEY_SCOPE);
     expiresIn = json.getLong(KEY_EXPIRES_IN);
   }
