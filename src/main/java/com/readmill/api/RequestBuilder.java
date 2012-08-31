@@ -131,6 +131,10 @@ public class RequestBuilder {
     return args("comment[posted_at]", toISO8601(value));
   }
 
+  public RequestBuilder commentPostedAt(String value) {
+    return args("comment[posted_at]", value);
+  }
+
   // The number of results to return. Default is 20, max 100.
   // Example value: 75
   public RequestBuilder count(Integer value) {
@@ -148,6 +152,10 @@ public class RequestBuilder {
     return args("from", toISO8601(value));
   }
 
+  public RequestBuilder from(String value) {
+    return args("from", value);
+  }
+
   // The content of the highlight.
   // Example value: A great highlight
   public RequestBuilder highlightContent(String value) {
@@ -160,6 +168,10 @@ public class RequestBuilder {
     return args("highlight[highlighted_at]", toISO8601(value));
   }
 
+  public RequestBuilder highlightHighlightedAt(String value) {
+    return args("highlight[highlighted_at]", value);
+  }
+
   // Locators are used to determine the exact location of the highlight in a
   // larger piece of text. This is a custom JSON structure that contains a few
   // different data points.
@@ -169,6 +181,10 @@ public class RequestBuilder {
   // Example value: {}
   public RequestBuilder highlightLocators(JSONObject value) {
     return args("highlight[locators]", value.toString());
+  }
+
+  public RequestBuilder highlightLocators(String value) {
+    return args("highlight[locators]", value);
   }
 
   // The position in the book where this highlight was made. Percent as a double.
@@ -231,6 +247,10 @@ public class RequestBuilder {
     return args("ping[occurred_at]", toISO8601(value));
   }
 
+  public RequestBuilder pingOccurredAt(String value) {
+    return args("ping[occurred_at]", value);
+  }
+
   // The progress of the reading session. In percent, between <code>0.0</code> and <code>1.0</code>.
   // Example value: 0.25
   public RequestBuilder pingProgress(Double value) {
@@ -249,8 +269,24 @@ public class RequestBuilder {
   //
   // If omitted sharing will happen according to the authenticated user
   // default settings.
-  public RequestBuilder postTo(JSONArray connections) {
-    return args("post_to", connections.toString());
+  public RequestBuilder readingPostTo(JSONArray connections) {
+    return args("reading[post_to]", connections.toString());
+  }
+
+  // This parameter is used for sharing to other networks.
+  //
+  // Through <a href="/api/docs/v2/get/me/connections.html">/me/connections</a>
+  // you can find id's of the authenticated user's connection to sites like
+  // Twitter and Facebook. The response from that endpoint also includes the
+  // users default state (share or not share).
+  //
+  // To enable sharing to one or more connection, pass an array of JSON objects
+  // that include a single key: "id" with the id for the given connection.
+  //
+  // If omitted sharing will happen according to the authenticated user
+  // default settings.
+  public RequestBuilder highlightPostTo(JSONArray connections) {
+    return args("highlight[post_to]", connections.toString());
   }
 
   // A string with search terms.
@@ -264,6 +300,10 @@ public class RequestBuilder {
     return args("reading[abandoned_at]", toISO8601(value));
   }
 
+  public RequestBuilder readingAbandonedAt(String value) {
+    return args("reading[abandoned_at]", value);
+  }
+
   // A closing remark of the book. Only visible if book is finished or abandoned.
   // Example value: This was truly a great read
   public RequestBuilder readingClosingRemark(String value) {
@@ -274,6 +314,10 @@ public class RequestBuilder {
   // Example value: 2012-02-27T12:45:02Z
   public RequestBuilder readingFinishedAt(Date value) {
     return args("reading[finished_at]", toISO8601(value));
+  }
+
+  public RequestBuilder readingFinishedAt(String value) {
+    return args("reading[finished_at]", value);
   }
 
   // Flag to indicate if the reading is private or public.
@@ -291,6 +335,10 @@ public class RequestBuilder {
   // Example value: 2012-02-27T12:45:02Z
   public RequestBuilder readingStartedAt(Date value) {
     return args("reading[started_at]", toISO8601(value));
+  }
+
+  public RequestBuilder readingStartedAt(String value) {
+    return args("reading[started_at]", value);
   }
 
   // If the reading was recommended by another user you can credit them by including their user id.
