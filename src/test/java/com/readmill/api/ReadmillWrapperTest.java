@@ -145,11 +145,11 @@ public class ReadmillWrapperTest {
     URI redirectURI = URI.create("http://wrappertest.com/callback");
     mWrapper.setRedirectURI(redirectURI);
 
-    String tokenJSON = "{\n" +
-        "\"access_token\":  \"04u7h-4cc355-70k3n\",\n" +
-        "\"expires_in\":    3600,\n" +
-        "\"scope\":         \"\",\n" +
-        "\"refresh_token\": \"04u7h-r3fr35h-70k3n\"\n" +
+    String tokenJSON = "{" +
+        "\"access_token\":  \"04u7h-4cc355-70k3n\"," +
+        "\"expires_in\":    3600," +
+        "\"scope\":         \"\"," +
+        "\"refresh_token\": \"04u7h-r3fr35h-70k3n\"" +
         "}";
 
     ArgumentCaptor<Request> requestArgument = ArgumentCaptor.forClass(Request.class);
@@ -180,11 +180,11 @@ public class ReadmillWrapperTest {
 
   @Test
   public void obtainTokenWithScope() throws IOException, JSONException {
-    String tokenJSON = "{\n" +
-        "\"access_token\":  \"04u7h-4cc355-70k3n\",\n" +
-        "\"expires_in\":    3600,\n" +
-        "\"scope\":         \"\",\n" +
-        "\"refresh_token\": \"04u7h-r3fr35h-70k3n\"\n" +
+    String tokenJSON = "{" +
+        "\"access_token\":  \"04u7h-4cc355-70k3n\"," +
+        "\"expires_in\":    3600," +
+        "\"scope\":         \"\"," +
+        "\"refresh_token\": \"04u7h-r3fr35h-70k3n\"" +
         "}";
 
     URI redirectURI = URI.create("http://wrappertest.com/callback");
