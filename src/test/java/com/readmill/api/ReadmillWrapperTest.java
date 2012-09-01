@@ -4,8 +4,10 @@ import org.apache.http.Header;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Before;
@@ -199,6 +201,34 @@ public class ReadmillWrapperTest {
 
     URI sentRequest = URI.create(requestArgument.getValue().toUrl());
     assertThat(sentRequest.getQuery(), containsString("scope=non-expiring"));
+  }
+
+  @Test
+  public void get() {
+    RequestBuilder builder = mWrapper.get("/endpoint");
+    assertThat(builder.getRequestBaseClass().getName(), is(HttpGet.class.getName()));
+    assertThat(builder.getRequest().toUrl(), containsString("/endpoint"));
+  }
+
+  @Test
+  public void put() {
+    RequestBuilder builder = mWrapper.put("/endpoint");
+    assertThat(builder.getRequestBaseClass().getName(), is(HttpPut.class.getName()));
+    assertThat(builder.getRequest().toUrl(), containsString("/endpoint"));
+  }
+
+  @Test
+  public void post() {
+    RequestBuilder builder = mWrapper.post("/endpoint");
+    assertThat(builder.getRequestBaseClass().getName(), is(HttpPost.class.getName()));
+    assertThat(builder.getRequest().toUrl(), containsString("/endpoint"));
+  }
+
+  @Test
+  public void delete() {
+    RequestBuilder builder = mWrapper.delete("/endpoint");
+    assertThat(builder.getRequestBaseClass().getName(), is(HttpDelete.class.getName()));
+    assertThat(builder.getRequest().toUrl(), containsString("/endpoint"));
   }
 
   // Helpers
