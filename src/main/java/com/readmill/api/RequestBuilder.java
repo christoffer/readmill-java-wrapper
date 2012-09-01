@@ -19,6 +19,7 @@ import java.util.TimeZone;
 public class RequestBuilder {
   private ReadmillWrapper mWrapper;
   private Request mRequest;
+
   private Class<? extends HttpRequestBase> mRequestBaseClass;
 
   private final String ISO8601 = "yyyy-MM-dd'T'HH:mm:ss'Z'";
@@ -35,6 +36,15 @@ public class RequestBuilder {
 
   public Request getRequest() {
     return mRequest;
+  }
+
+  /**
+   * Gets the base request class for this request builder.
+   *
+   * @return The current request base class
+   */
+  public Class<? extends HttpRequestBase> getRequestBaseClass() {
+    return mRequestBaseClass;
   }
 
   /**
