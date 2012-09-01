@@ -91,7 +91,7 @@ public class RequestBuilder {
   }
 
   // ==================
-  // PARAMETER BUILDERS
+  // ARGUMENT BUILDERS
   // ==================
 
   // The name of the author.
