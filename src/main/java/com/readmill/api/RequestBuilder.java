@@ -140,7 +140,7 @@ public class RequestBuilder {
 
   // The number of results to return. Default is 20, max 100.
   // Example value: 75
-  public RequestBuilder count(Integer value) {
+  public RequestBuilder count(int value) {
     return args("count", value);
   }
 
@@ -194,19 +194,19 @@ public class RequestBuilder {
 
   // The position in the book where this highlight was made. Percent as a double.
   // Example value: 0.8723
-  public RequestBuilder highlightPosition(Double value) {
+  public RequestBuilder highlightPosition(double value) {
     return args("highlight[position]", value);
   }
 
   // Only include readings which have equal or more highlights.
   // Example value: 8
-  public RequestBuilder highlightsCountFrom(Integer value) {
+  public RequestBuilder highlightsCountFrom(int value) {
     return args("highlights_count[from]", value);
   }
 
   // Only include readings which have less or equal highlights.
   // Example value: 10
-  public RequestBuilder highlightsCountTo(Integer value) {
+  public RequestBuilder highlightsCountTo(int value) {
     return args("highlights_count[to]", value);
   }
 
@@ -226,7 +226,7 @@ public class RequestBuilder {
 
   // The duration of the reading session. In seconds.
   // Example value: 500
-  public RequestBuilder pingDuration(Integer value) {
+  public RequestBuilder pingDuration(int value) {
     return args("ping[duration]", value);
   }
 
@@ -241,13 +241,13 @@ public class RequestBuilder {
 
   // The latitude coordinates of the position when reading.
   // Example value: 59.3085
-  public RequestBuilder pingLat(Double value) {
+  public RequestBuilder pingLat(double value) {
     return args("ping[lat]", value);
   }
 
   // The longitude coordinates of the position when reading.
   // Example value: 18.1995
-  public RequestBuilder pingLng(Double value) {
+  public RequestBuilder pingLng(double value) {
     return args("ping[lng]", value);
   }
 
@@ -264,7 +264,7 @@ public class RequestBuilder {
   // The progress of the reading session. In percent, between <code>0.0</code>
   // and <code>1.0</code>.
   // Example value: 0.25
-  public RequestBuilder pingProgress(Double value) {
+  public RequestBuilder pingProgress(double value) {
     return args("ping[progress]", value);
   }
 
@@ -339,13 +339,14 @@ public class RequestBuilder {
 
   // Flag to indicate if the reading is private or public.
   // Valid values: true, false
-  public RequestBuilder readingPrivate(String value) {
+  public RequestBuilder readingPrivate(boolean value) {
     return args("reading[private]", value);
   }
 
   // Flag to indicate if the reader recommends the book.
-  public RequestBuilder readingRecommended(Boolean value) {
-    return args("reading[recommended]", value ? "true" : "false");
+  // Valid values: true, false
+  public RequestBuilder readingRecommended(boolean value) {
+    return args("reading[recommended]", value);
   }
 
   // Date which says when this reading was started. Mainly for use when readings
@@ -364,7 +365,7 @@ public class RequestBuilder {
   // If the reading was recommended by another user you can credit them by
   // including their user id.
   // Example value: 9
-  public RequestBuilder readingViaId(Integer value) {
+  public RequestBuilder readingViaId(int value) {
     return args("reading[via_id]", value);
   }
 
@@ -412,13 +413,18 @@ public class RequestBuilder {
     return this;
   }
 
-  private RequestBuilder args(String key, Integer value) {
+  private RequestBuilder args(String key, int value) {
     mRequest.withParams(key, value);
     return this;
   }
 
-  private RequestBuilder args(String key, Double value) {
+  private RequestBuilder args(String key, double value) {
     mRequest.withParams(key, value);
+    return this;
+  }
+
+  private RequestBuilder args(String key, boolean value) {
+    mRequest.withParams(key, value ? "true" : "false");
     return this;
   }
 
