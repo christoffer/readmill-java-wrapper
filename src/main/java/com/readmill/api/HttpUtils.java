@@ -11,7 +11,7 @@ import java.io.IOException;
 @SuppressWarnings("UnusedDeclaration")
 public class HttpUtils {
   /**
-   * Consume a http response as JSON.
+   * Consumes a http response as JSON.
    *
    * @param response Response to parse.
    * @return The parsed JSONObject or null if it could not parsed or an
@@ -30,7 +30,7 @@ public class HttpUtils {
   }
 
   /**
-   * Consume a http response as JSON.
+   * Consumes a http response as JSON.
    *
    * @param response Response to parse.
    * @return The parsed JSONObject
@@ -42,7 +42,7 @@ public class HttpUtils {
   }
 
   /**
-   * Consume a http response as a string.
+   * Consumes a http response as a string.
    *
    * @param response The http response to consume
    * @return The response body of the response as a string
@@ -54,7 +54,7 @@ public class HttpUtils {
   }
 
   /**
-   * Consume a http response as a string.
+   * Consumes a http response as a string.
    *
    * @param response The http response to consume
    * @return The response body of the response as a string or null

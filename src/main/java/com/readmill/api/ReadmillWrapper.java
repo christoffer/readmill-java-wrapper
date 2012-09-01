@@ -31,7 +31,7 @@ public class ReadmillWrapper {
   private String mScope;
 
   /**
-   * Create a wrapper for a given client and environment.
+   * Creates a wrapper for a given client and environment.
    *
    * @param clientId     Client Identifier
    * @param clientSecret Client secret
@@ -44,7 +44,7 @@ public class ReadmillWrapper {
   }
 
   /**
-   * Get the current client id
+   * Gets the current client id
    *
    * @return The current client id or null if not set.
    */
@@ -53,7 +53,7 @@ public class ReadmillWrapper {
   }
 
   /**
-   * Get the current client secret
+   * Gets the current client secret
    *
    * @return The current client secret or null if not set.
    */
@@ -62,7 +62,7 @@ public class ReadmillWrapper {
   }
 
   /**
-   * Get the current environment
+   * Gets the current environment
    *
    * @return The current environment or null if not set.
    */
@@ -71,7 +71,7 @@ public class ReadmillWrapper {
   }
 
   /**
-   * Get the current token
+   * Gets the current token
    *
    * @return The current token or null if not set.
    */
@@ -81,7 +81,7 @@ public class ReadmillWrapper {
   }
 
   /**
-   * Set the token used for requests.
+   * Sets the token used for requests.
    *
    * @param token token used for authenticating requests made with the
    *              wrapper.
@@ -91,7 +91,7 @@ public class ReadmillWrapper {
   }
 
   /**
-   * Set the redirect uri used for generating an authentication url
+   * Sets the redirect uri used for generating an authentication url
    * and for obtaining a token.
    *
    * @param redirectURI Redirection uri for requesting tokens
@@ -101,7 +101,7 @@ public class ReadmillWrapper {
   }
 
   /**
-   * Set the scope for which to ask authorization.
+   * Sets the scope for which to ask authorization.
    * <p/>
    * Affects getAuthorizationURL() and obtainToken().
    *
@@ -112,7 +112,7 @@ public class ReadmillWrapper {
   }
 
   /**
-   * Construct a url to where the user can authenticate the wrapper.
+   * Constructs a url to where the user can authenticate the wrapper.
    *
    * @return The url or null if no redirect uri is set or if it is invalid.
    */
@@ -137,7 +137,7 @@ public class ReadmillWrapper {
   }
 
   /**
-   * Obtain a token by providing an authorization code.
+   * Obtains a token by exchanging an authorization code.
    *
    * @param authorizationCode Authorization code
    * @return The obtained token or null
@@ -155,7 +155,7 @@ public class ReadmillWrapper {
   }
 
   /**
-   * Obtain a token by providing an authorization code.
+   * Obtains a token by providing an authorization code.
    * <p/>
    * Uses the redirect uri and scope set on the wrapper with #setRedirectURI()
    * and #setScope().
@@ -193,7 +193,7 @@ public class ReadmillWrapper {
   }
 
   /**
-   * Get the http client used to make requests.
+   * Gets the http client used to make requests.
    *
    * @return The HttpClient used for making requests with this wrapper
    */
@@ -214,7 +214,7 @@ public class ReadmillWrapper {
   }
 
   /**
-   * Start building a GET request to a given endpoint.
+   * Starts building a GET request to a given endpoint.
    *
    * @param uri Endpoint for the request
    * @return a RequestBuilder for a request to the given endpint and verb
@@ -224,7 +224,7 @@ public class ReadmillWrapper {
   }
 
   /**
-   * Start building a POST request to a given endpoint.
+   * Starts building a POST request to a given endpoint.
    *
    * @param uri Endpoint for the request
    * @return a RequestBuilder for a request to the given endpint and verb
@@ -234,7 +234,7 @@ public class ReadmillWrapper {
   }
 
   /**
-   * Start building a DELETE request to a given endpoint.
+   * Starts building a DELETE request to a given endpoint.
    *
    * @param uri Endpoint for the request
    * @return a RequestBuilder for a request to the given endpint and verb
@@ -244,7 +244,7 @@ public class ReadmillWrapper {
   }
 
   /**
-   * Start building a PUT request to a given endpoint.
+   * Starts building a PUT request to a given endpoint.
    *
    * @param uri Endpoint for the request
    * @return a RequestBuilder for a request to the given endpint and verb
@@ -258,7 +258,7 @@ public class ReadmillWrapper {
    */
 
   /**
-   * Execute a request with a provided HTTP verb.
+   * Executes a request with a provided HTTP verb.
    *
    * @param request Request to execute
    * @param klass   HTTP verb to use for request (HttpPost, HttpGet, etc.)
@@ -271,7 +271,7 @@ public class ReadmillWrapper {
   }
 
   /**
-   * Execute a request and return the response body as a string.
+   * Executes a request and return the response body as a string.
    *
    * @param request Request to execute
    * @param klass   HttpRequest class to execute as (HttpPost, HttpGet etc)
@@ -284,7 +284,7 @@ public class ReadmillWrapper {
   }
 
   /**
-   * Add the strongest available authorization to a request.
+   * Adds the strongest available authorization to a request.
    * <p/>
    * Order of authentication strengths (strongest to weakest)
    * <p/>
@@ -317,7 +317,7 @@ public class ReadmillWrapper {
   // Private
 
   /**
-   * Resolve the target host to use when executing HTTP requests.
+   * Resolves the target host to use when executing HTTP requests.
    *
    * @param request The request to resolve target for
    * @return The resolved HttpHost

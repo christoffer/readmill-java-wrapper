@@ -3,7 +3,6 @@ package com.readmill.api;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.io.Serializable;
 
 @SuppressWarnings("UnusedDeclaration")
@@ -20,10 +19,11 @@ public class Token implements Serializable {
   private long expiresIn;
 
   /**
-   * Construct a new token with an explicit access-, and refresh token
-   * @param accessToken Access token
+   * Constructs a new token with an explicit access-, and refresh token
+   *
+   * @param accessToken  Access token
    * @param refreshToken Refresh token
-   * @param scope Scope of the token
+   * @param scope        Scope of the token
    */
   public Token(String accessToken, String refreshToken, String scope) {
     this.accessToken = accessToken;
@@ -32,9 +32,10 @@ public class Token implements Serializable {
   }
 
   /**
-   * Construct a new non-expiring token.
+   * Constructs a new non-expiring token.
    * Non expiring tokens does not have a refresh token.
-   * @param accessToken
+   *
+   * @param accessToken The access token
    */
   public Token(String accessToken) {
     this.accessToken = accessToken;
@@ -43,9 +44,11 @@ public class Token implements Serializable {
   }
 
   /**
-   * Construct a token from a JSON response.
+   * Constructs a token from a JSON response.
+   *
    * @param json JSON response
-   * @throws IOException When given an invalid JSON object
+   * @throws org.json.JSONException if the given json object is not properly
+   *                                formatted as a token
    */
   public Token(JSONObject json) throws JSONException {
     accessToken = json.getString(KEY_ACCESS_TOKEN);
@@ -55,6 +58,8 @@ public class Token implements Serializable {
   }
 
   /**
+   * Gets the access token.
+   *
    * @return The Access token
    */
   public String getAccessToken() {
@@ -62,6 +67,8 @@ public class Token implements Serializable {
   }
 
   /**
+   * Gets the refresh token.
+   *
    * @return The refresh token
    */
   public String getRefreshToken() {
@@ -69,6 +76,8 @@ public class Token implements Serializable {
   }
 
   /**
+   * Gets the scope.
+   *
    * @return The scope
    */
   public String getScope() {
@@ -76,6 +85,8 @@ public class Token implements Serializable {
   }
 
   /**
+   * Gets the expires in value.
+   *
    * @return the expiration time (based on when the token was created)
    */
   public long getExpiresIn() {
@@ -90,6 +101,11 @@ public class Token implements Serializable {
   }
 
   /**
+   * Checks if the token is valid.
+   * <p/>
+   * Note that this can give false positives, as the token might have been
+   * invalidated on the server.
+   *
    * @return Token validity
    */
   public boolean isValid() {

@@ -7,7 +7,7 @@ public class Environment {
   private final HttpHost mApiHost, mWebHost;
 
   /**
-   * Create an environment for a Api Wrapper.
+   * Creates an environment for a Api Wrapper.
    * @param apiHost Host to send requests to
    * @param loginHost Host where users can log in to the service
    * @param useSSL use secure connections or not
@@ -18,11 +18,13 @@ public class Environment {
 
   /**
    * The Readmill LIVE API environment.
+   * Sends requests to https://api.readmill.com.
+   * Authorizes on https://readmill.com.
    */
   public static final Environment Live = new Environment("api.readmill.com", "m.readmill.com", true);
 
   /**
-   * Create an environment for a Api Wrapper.
+   * Creates an environment for a Api Wrapper.
    * @param apiHost Host to send requests to
    * @param apiPort Port of api host
    * @param webHost Host where users can log in to the service
@@ -36,7 +38,7 @@ public class Environment {
   }
 
   /**
-   * Get the api host for this environment
+   * Gets the api host for this environment
    *
    * @return The api host
    */
@@ -45,7 +47,7 @@ public class Environment {
   }
 
   /**
-   * Get the web host for this environment
+   * Gets the web host for this environment
    *
    * @return The web host
    */
@@ -54,7 +56,7 @@ public class Environment {
   }
 
   /**
-   * Get the URL to the api host.
+   * Gets the URL to the api host.
    *
    * @return The url as a string for the api host
    */
@@ -63,7 +65,7 @@ public class Environment {
   }
 
   /**
-   * Get the URL to the web host.
+   * Gets the URL to the web host.
    *
    * @return The url as a string to the web host
    */

@@ -38,7 +38,7 @@ public class RequestBuilder {
   }
 
   /**
-   * Execute the built request and parse the result as JSON.
+   * Executes the built request and parses the result as JSON.
    *
    * @return The parsed JSONObject or null if the request failed or was not
    *         valid JSON.
@@ -55,10 +55,10 @@ public class RequestBuilder {
   }
 
   /**
-   * Execute the built request and parse the result as JSON with a top level
-   * key unwrapped.
+   * Executes the built request and parses the result as JSON. Also unwraps the
+   * given top level object.
    *
-   * @param key top level key to unwrap.
+   * @param key top level object to unwrap.
    * @return The parsed JSONObject or null if the the request failed or the
    *         response was not properly formatted.
    */
@@ -68,7 +68,7 @@ public class RequestBuilder {
   }
 
   /**
-   * Execute the built request and parse the result as JSON.
+   * Executes the built request and parses the result as JSON.
    *
    * @return The parsed JSON object.
    * @throws IOException   if the request failed
@@ -79,10 +79,10 @@ public class RequestBuilder {
   }
 
   /**
-   * Execute the built request and parse the result as JSON with a top level
-   * key unwrapped.
+   * Executes the built request and parses the result as JSON. Also unwraps the
+   * given top level object.
    *
-   * @param key The top level key to unwrap
+   * @param key The top level object to unwrap
    * @return The parsed JSON object.
    * @throws IOException   if the request failed
    * @throws JSONException if the response was not valid JSON
@@ -93,8 +93,8 @@ public class RequestBuilder {
   }
 
   /**
-   * Execute the built request and parse the result as JSON formatted as a
-   * Readmill collection object.
+   * Executes the built request and parses the result as JSON. Also unwraps
+   * the top level object "items".
    *
    * @return The parsed JSONArray or null if the request failed, or the response
    *         was not properly formatted.
@@ -106,9 +106,9 @@ public class RequestBuilder {
   }
 
   /**
-   * Execute the built request and parse the result as JSON formatted as a
-   * Readmill collection object. Unwraps each object in the parsed collection
-   * by the given top level key.
+   * Executes the built request and parses the result as JSON. Also unwraps the
+   * top level object "items", and each given top level object inside of the
+   * collection.
    *
    * @param key Top level key to unwrap
    * @return The parsed JSONArray or null if the request failed or the response
@@ -127,8 +127,9 @@ public class RequestBuilder {
   }
 
   /**
-   * Execute the built request and parse the result as JSON formatted as a
-   * Readmill collection object.
+   * Executes the built request and parses the result as JSON. Also unwraps the
+   * top level object "items".
+   *
    * <p/>
    * Readmill collection objects are objects with a top level key "items" that
    * contains an array of the objects in the collection.
@@ -153,9 +154,9 @@ public class RequestBuilder {
   }
 
   /**
-   * Execute the built request and parse the result as JSON formatted as a
-   * Readmill collection object. Unwraps each object in the parsed collection
-   * by the given top level key.
+   * Executes the built request and parses the result as JSON. Also unwraps the
+   * top level object "items", and each given top level object inside of the
+   * collection.
    * <p/>
    * Readmill collection objects are objects with a top level key "items" that
    * contains an array of the objects in the collection. Each object is
@@ -204,7 +205,7 @@ public class RequestBuilder {
   }
 
   /**
-   * Execute the built request and return the text body of the response.
+   * Executes the built request and returns the text body of the response.
    *
    * @return The text body of the response.
    * @throws IOException if the request fails
@@ -214,9 +215,6 @@ public class RequestBuilder {
     HttpEntity entity = response.getEntity();
     return EntityUtils.toString(entity);
   }
-
-
-
 
   // ==================
   // ARGUMENT BUILDERS
