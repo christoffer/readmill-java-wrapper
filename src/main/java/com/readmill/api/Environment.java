@@ -17,6 +17,11 @@ public class Environment {
   }
 
   /**
+   * The Readmill LIVE API environment.
+   */
+  public static final Environment Live = new Environment("api.readmill.com", "m.readmill.com", true);
+
+  /**
    * Create an environment for a Api Wrapper.
    * @param apiHost Host to send requests to
    * @param apiPort Port of api host
@@ -30,20 +35,38 @@ public class Environment {
     mWebHost = new HttpHost(webHost, webPort, scheme);
   }
 
+  /**
+   * Get the api host for this environment
+   *
+   * @return The api host
+   */
   public HttpHost getApiHost() {
     return mApiHost;
   }
 
+  /**
+   * Get the web host for this environment
+   *
+   * @return The web host
+   */
   public HttpHost getWebHost() {
     return mWebHost;
   }
 
-  public static final Environment Live = new Environment("api.readmill.com", "m.readmill.com", true);
-
+  /**
+   * Get the URL to the api host.
+   *
+   * @return The url as a string for the api host
+   */
   public String getApiUrl() {
     return mApiHost.toString();
   }
 
+  /**
+   * Get the URL to the web host.
+   *
+   * @return The url as a string to the web host
+   */
   public String getWebUrl() {
     return mWebHost.toString();
   }
