@@ -37,11 +37,10 @@ For authenticated requests you need to obtain an access token.
               fetch("reading");
 
   // Update
-  wrapper.put("/readings/" + reading.getInt("id")).readingState("finished").
-            send(); // or use .fetch() if you also want to capture the updated object
+  wrapper.put("/readings/" + reading.getInt("id")).readingState("finished").fetch();
 
   // Delete
-  wrapper.delete("/readings/" + reading.getInt("id")).send();
+  wrapper.delete("/readings/" + reading.getInt("id")).fetch();
 ```
 
 Or if you prefer to build the requests yourself:
@@ -55,7 +54,7 @@ Or if you prefer to build the requests yourself:
                                  withParams("state", "finished", "reading[via]", 1).
                                  usingToken(userToken);
 
-  HTTPResponse response = wrapper.put(updateReadingState).send(); // or fetch()
+  HTTPResponse response = wrapper.put(updateReadingState).fetch();
 ```
 
 ## Tutorial: Finish my latest reading
@@ -116,9 +115,7 @@ The methods `.post(path)`, `.put(path)`, `.delete(path)` or `.head(path)`
 are also available for endpoints with other verbs.
 
 Finish building a request by calling `.fetch()`. This sends the request to the
-server and parses the result as a JSON object. If you don't care about the
-response then you can use `send()` which performs the request but does not
-return anything.
+server and parses the result as a JSON object.
 
 All responses from Readmill are wrapped in a key that determines the type of the
 object. For example, the `/me` endpoint above returns a user, and the json

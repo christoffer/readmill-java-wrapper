@@ -215,9 +215,6 @@ public class RequestBuilder {
     return EntityUtils.toString(entity);
   }
 
-  public void send() throws IOException {
-    sendRequest();
-  }
 
 
 
