@@ -37,21 +37,21 @@ public class RequestBuilderTest {
   }
 
   @Test
-  public void json() throws JSONException, IOException {
+  public void fetchOrThrow() throws JSONException, IOException {
     JSONObject user = new JSONObject("{ \"user\": { \"username\": \"christoffer\", id: 1 } }");
-    JSONObject json = builderWithStubbedResponseText(user.toString()).fetch();
+    JSONObject json = builderWithStubbedResponseText(user.toString()).fetchOrThrow();
     assertThat(json.toString(), is(user.toString()));
   }
 
   @Test
-  public void jsonUnwrap() throws JSONException, IOException {
+  public void fetchOrThrowString() throws JSONException, IOException {
     JSONObject user = new JSONObject("{ \"user\": { \"username\": \"christoffer\", id: 1 } }");
-    JSONObject json = builderWithStubbedResponseText(user.toString()).fetch("user");
+    JSONObject json = builderWithStubbedResponseText(user.toString()).fetchOrThrow("user");
     assertThat(json.toString(), is(user.optJSONObject("user").toString()));
   }
 
   @Test
-  public void jsonItems() throws JSONException, IOException {
+  public void fetchItemsOrThrow() throws JSONException, IOException {
     JSONObject userOne = new JSONObject("{ \"user\": { \"username\": \"christoffer\", id: 1 } }");
     JSONObject userTwo = new JSONObject("{ \"user\": { \"username\": \"niki\", id: 387 } }");
 
@@ -61,13 +61,13 @@ public class RequestBuilderTest {
     usersWithoutRoot.put(userOne);
     usersWithoutRoot.put(userTwo);
 
-    JSONArray json = builderWithStubbedResponseText(usersWrapped.toString()).fetchItems();
+    JSONArray json = builderWithStubbedResponseText(usersWrapped.toString()).fetchItemsOrThrow();
 
     assertThat(json.toString(), is(usersWithoutRoot.toString()));
   }
 
   @Test
-  public void jsonItemsUnwrap() throws JSONException, IOException {
+  public void fetchItemsOrThrowString() throws JSONException, IOException {
     JSONObject userOne = new JSONObject("{ \"user\": { \"username\": \"christoffer\", id: 1 } }");
     JSONObject userTwo = new JSONObject("{ \"user\": { \"username\": \"niki\", id: 387 } }");
 
@@ -77,7 +77,7 @@ public class RequestBuilderTest {
     usersUnwrapped.put(userOne.getJSONObject("user"));
     usersUnwrapped.put(userTwo.getJSONObject("user"));
 
-    JSONArray json = builderWithStubbedResponseText(usersWrapped.toString()).fetchItems("user");
+    JSONArray json = builderWithStubbedResponseText(usersWrapped.toString()).fetchItemsOrThrow("user");
 
     assertThat(json.toString(), is(usersUnwrapped.toString()));
   }

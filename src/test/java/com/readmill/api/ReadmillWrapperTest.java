@@ -142,7 +142,7 @@ public class ReadmillWrapperTest {
   }
 
   @Test
-  public void obtainToken() throws IOException, JSONException {
+  public void obtainTokenThrows() throws IOException, JSONException {
     URI redirectURI = URI.create("http://wrappertest.com/callback");
     mWrapper.setRedirectURI(redirectURI);
 
@@ -157,7 +157,7 @@ public class ReadmillWrapperTest {
     mWrapper = Mockito.spy(mWrapper);
     Mockito.doReturn(tokenJSON).when(mWrapper).getResponseText(requestArgument.capture(), Mockito.eq(HttpPost.class));
 
-    Token obtainedToken = mWrapper.obtainToken("authcode2000");
+    Token obtainedToken = mWrapper.obtainTokenThrows("authcode2000");
 
     URI sentRequest = URI.create(requestArgument.getValue().toUrl());
 
@@ -180,7 +180,7 @@ public class ReadmillWrapperTest {
   }
 
   @Test
-  public void obtainTokenWithScope() throws IOException, JSONException {
+  public void obtainTokenThrowsWithScope() throws IOException, JSONException {
     String tokenJSON = "{" +
         "\"access_token\":  \"04u7h-4cc355-70k3n\"," +
         "\"expires_in\":    3600," +
@@ -195,7 +195,7 @@ public class ReadmillWrapperTest {
     mWrapper = Mockito.spy(mWrapper);
     Mockito.doReturn(tokenJSON).when(mWrapper).getResponseText(requestArgument.capture(), Mockito.eq(HttpPost.class));
 
-    mWrapper.obtainToken("my-code");
+    mWrapper.obtainTokenThrows("my-code");
 
     URI sentRequest = URI.create(requestArgument.getValue().toUrl());
     assertThat(sentRequest.getQuery(), containsString("scope=non-expiring"));
