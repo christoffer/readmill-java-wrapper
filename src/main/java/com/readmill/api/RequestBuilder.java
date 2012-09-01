@@ -37,58 +37,189 @@ public class RequestBuilder {
     return mRequest;
   }
 
-  /*
-   * Performs the request and returns the parsed JSON object.
+  /**
+   * Execute the built request and parse the result as JSON.
+   *
+   * @return The parsed JSONObject or null if the request failed or was not
+   *         valid JSON.
    */
   public JSONObject fetch() {
     try {
-      String responseText = getResponseText();
-      return new JSONObject(responseText);
+      return fetchOrThrow();
     } catch(JSONException e) {
       e.printStackTrace();
-      return new JSONObject();
     } catch(IOException e) {
       e.printStackTrace();
-      return new JSONObject();
     }
+    return null;
   }
 
+  /**
+   * Execute the built request and parse the result as JSON with a top level
+   * key unwrapped.
+   *
+   * @param key top level key to unwrap.
+   * @return The parsed JSONObject or null if the the request failed or the
+   *         response was not properly formatted.
+   */
   public JSONObject fetch(String key) {
-    return fetch().optJSONObject(key);
+    JSONObject fetched = fetch();
+    return fetched == null ? null : fetched.optJSONObject(key);
   }
 
+  /**
+   * Execute the built request and parse the result as JSON.
+   *
+   * @return The parsed JSON object.
+   * @throws IOException   if the request failed
+   * @throws JSONException if the response was not valid JSON
+   */
+  public JSONObject fetchOrThrow() throws IOException, JSONException {
+    return new JSONObject(getResponseText());
+  }
+
+  /**
+   * Execute the built request and parse the result as JSON with a top level
+   * key unwrapped.
+   *
+   * @param key The top level key to unwrap
+   * @return The parsed JSON object.
+   * @throws IOException   if the request failed
+   * @throws JSONException if the response was not valid JSON
+   */
+  public JSONObject fetchOrThrow(String key) throws IOException, JSONException {
+    JSONObject fetched = new JSONObject(getResponseText());
+    return fetched.getJSONObject(key);
+  }
+
+  /**
+   * Execute the built request and parse the result as JSON formatted as a
+   * Readmill collection object.
+   *
+   * @return The parsed JSONArray or null if the request failed, or the response
+   *         was not properly formatted.
+   * @see #fetchItemsOrThrow()
+   */
   public JSONArray fetchItems() {
-    return fetch().optJSONArray("items");
+    JSONObject fetched = fetch();
+    return fetched == null ? null : fetched.optJSONArray("items");
   }
 
-  public JSONArray fetchItems(String unwrapKey) {
-    JSONArray items = fetch().optJSONArray("items");
-    if(items == null || items.length() == 0) {
-      return new JSONArray();
-    }
-
-    ArrayList<JSONObject> unwrapped = new ArrayList<JSONObject>(items.length());
-
+  /**
+   * Execute the built request and parse the result as JSON formatted as a
+   * Readmill collection object. Unwraps each object in the parsed collection
+   * by the given top level key.
+   *
+   * @param key Top level key to unwrap
+   * @return The parsed JSONArray or null if the request failed or the response
+   *         was no properly formatted.
+   * @see #fetchItemsOrThrow(String)
+   */
+  public JSONArray fetchItems(String key) {
     try {
-      for(int i = 0; i < items.length(); i++) {
-        unwrapped.add(items.getJSONObject(i).getJSONObject(unwrapKey));
-      }
+      return fetchItemsOrThrow(key);
+    } catch(IOException e) {
+      e.printStackTrace();
     } catch(JSONException e) {
       e.printStackTrace();
-      return new JSONArray();
     }
+    return null;
+  }
+
+  /**
+   * Execute the built request and parse the result as JSON formatted as a
+   * Readmill collection object.
+   * <p/>
+   * Readmill collection objects are objects with a top level key "items" that
+   * contains an array of the objects in the collection.
+   * <p/>
+   * For example:
+   * <code>
+   * {
+   * "items": [
+   * { "book": { id: 1 } },
+   * { "book": { id: 2 } }
+   * ]
+   * }
+   * </code>
+   *
+   * @return The parsed JSONArray.
+   * @throws java.io.IOException    If the request failed
+   * @throws org.json.JSONException If the response was not properly formatted
+   */
+  public JSONArray fetchItemsOrThrow() throws IOException, JSONException {
+    JSONObject fetched = fetchOrThrow();
+    return fetched.getJSONArray("items");
+  }
+
+  /**
+   * Execute the built request and parse the result as JSON formatted as a
+   * Readmill collection object. Unwraps each object in the parsed collection
+   * by the given top level key.
+   * <p/>
+   * Readmill collection objects are objects with a top level key "items" that
+   * contains an array of the objects in the collection. Each object is
+   * individually wrapped by a key which indicates it's type.
+   * <p/>
+   * The method will first unwrap the top level object "items", and then unwrap
+   * each item in the collection. This only works if each object in the
+   * collection have the same type.
+   * <p/>
+   * For example, if calling fetchItems("book"), then this will parse correctly:
+   * <code>
+   * {
+   * "items": [
+   * { "book": { id: 1 } },
+   * { "book": { "id": 2 } }
+   * ]
+   * }
+   * # => JSONArray with {id: 1} and {id: 2}
+   * </code>
+   * but this won't:
+   * <code>
+   * {
+   * "items": [
+   * { "book": { id: 1 } },
+   * { "reading": { "id": 1 } }
+   * ]
+   * }
+   * # => null
+   * </code>
+   *
+   * @param key Top level key of objects to unwrap
+   * @return The parsed JSONArray or null if the request failed, or the response
+   *         was not properly formatted.
+   * @throws java.io.IOException    If the request was not successful
+   * @throws org.json.JSONException If the response was not properly formatted
+   */
+  public JSONArray fetchItemsOrThrow(String key) throws IOException, JSONException {
+    JSONArray items = fetchItemsOrThrow();
+    ArrayList<JSONObject> unwrapped = new ArrayList<JSONObject>(items.length());
+
+    for(int i = 0; i < items.length(); i++) {
+      unwrapped.add(items.getJSONObject(i).getJSONObject(key));
+    }
+
     return new JSONArray(unwrapped);
+  }
+
+  /**
+   * Execute the built request and return the text body of the response.
+   *
+   * @return The text body of the response.
+   * @throws IOException if the request fails
+   */
+  public String getResponseText() throws IOException {
+    HttpResponse response = sendRequest();
+    HttpEntity entity = response.getEntity();
+    return EntityUtils.toString(entity);
   }
 
   public void send() throws IOException {
     sendRequest();
   }
 
-  public String getResponseText() throws IOException {
-    HttpResponse response = sendRequest();
-    HttpEntity entity = response.getEntity();
-    return EntityUtils.toString(entity);
-  }
+
 
   // ==================
   // ARGUMENT BUILDERS
