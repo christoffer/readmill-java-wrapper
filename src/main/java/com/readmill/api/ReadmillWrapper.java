@@ -102,11 +102,11 @@ public class ReadmillWrapper {
   }
 
   /**
-   * Set the mScope for which to ask authorization.
+   * Set the scope for which to ask authorization.
    *
    * Affects getAuthorizationURL() and obtainToken().
    *
-   * @param scope mScope to ask permission for
+   * @param scope scope to ask permission for
    */
   public void setScope(String scope) {
     mScope = scope;
@@ -123,11 +123,11 @@ public class ReadmillWrapper {
     }
 
     try {
-      String template = "%s/oauth/authorize?response_type=mCode&client_id=%s&redirect_uri=%s";
+      String template = "%s/oauth/authorize?response_type=code&client_id=%s&redirect_uri=%s";
       String authorizeURL = String.format(template, mEnvironment.getWebHost().toURI(), mClientId, mRedirectURI.toString());
 
       if(mScope != null) {
-        authorizeURL += "&mScope=" + mScope;
+        authorizeURL += "&scope=" + mScope;
       }
 
       return URI.create(authorizeURL).toURL();
@@ -137,19 +137,10 @@ public class ReadmillWrapper {
     }
   }
 
-  public Authorization createAuthorization(URI redirectUri, String scope) {
-    Authorization auth = new Authorization(mClientId, mEnvironment.getWebHost().toURI());
-    auth.setRedirectURI(redirectUri);
-    if(scope != null) {
-      auth.setScope(scope);
-    }
-    return auth;
-  }
-
   /**
-   * Obtain a token by providing an authorization mCode.
+   * Obtain a token by providing an authorization code.
    *
-   * @param authorizationCode Authorization mCode to exhange for a token
+   * @param authorizationCode Authorization code to exchange for a token
    * @return The obtained token or null
    */
   public Token obtainToken(String authorizationCode) {
@@ -163,12 +154,12 @@ public class ReadmillWrapper {
         "grant_type", "authorization_code",
         "client_id", mClientId,
         "client_secret", mClientSecret,
-        "mCode", authorizationCode,
+        "code", authorizationCode,
         "redirect_uri", mRedirectURI
     );
 
     if(mScope != null) {
-      obtainRequest.withParams("mScope", mScope);
+      obtainRequest.withParams("scope", mScope);
     }
 
     try {

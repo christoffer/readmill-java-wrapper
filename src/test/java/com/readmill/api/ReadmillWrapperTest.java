@@ -135,7 +135,8 @@ public class ReadmillWrapperTest {
   public void getAuthorizationURLWithScope() throws MalformedURLException {
     URI redirectURI = URI.create("http://wrappertest.com/callback");
     mWrapper.setRedirectURI(redirectURI);
-    URL authorizeURL = mWrapper.getAuthorizationURL("non-expiring");
+    mWrapper.setScope("non-expiring");
+    URL authorizeURL = mWrapper.getAuthorizationURL();
 
     assertThat(authorizeURL.getQuery(), containsString("scope=non-expiring"));
   }
@@ -189,11 +190,12 @@ public class ReadmillWrapperTest {
 
     URI redirectURI = URI.create("http://wrappertest.com/callback");
     mWrapper.setRedirectURI(redirectURI);
+    mWrapper.setScope("non-expiring");
     ArgumentCaptor<Request> requestArgument = ArgumentCaptor.forClass(Request.class);
     mWrapper = Mockito.spy(mWrapper);
     Mockito.doReturn(tokenJSON).when(mWrapper).getResponseText(requestArgument.capture(), Mockito.eq(HttpPost.class));
 
-    mWrapper.obtainToken("my-code", "non-expiring");
+    mWrapper.obtainToken("my-code");
 
     URI sentRequest = URI.create(requestArgument.getValue().toUrl());
     assertThat(sentRequest.getQuery(), containsString("scope=non-expiring"));
