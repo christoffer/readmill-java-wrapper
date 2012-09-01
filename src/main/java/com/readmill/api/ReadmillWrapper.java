@@ -28,6 +28,7 @@ public class ReadmillWrapper {
   private Token mToken;
   private HttpClient mHttpClient;
   private URI mRedirectURI;
+  private String mScope;
 
   /**
    * Create a wrapper for a given client and environment.
@@ -43,44 +44,90 @@ public class ReadmillWrapper {
     mEnvironment = env;
   }
 
+  /**
+   * Get the current client id
+   *
+   * @return The current client id or null if not set.
+   */
   public String getClientId() {
     return mClientId;
   }
 
+  /**
+   * Get the current client secret
+   *
+   * @return The current client secret or null if not set.
+   */
   public String getClientSecret() {
     return mClientSecret;
   }
 
+  /**
+   * Get the current environment
+   *
+   * @return The current environment or null if not set.
+   */
   public Environment getEnvironment() {
     return mEnvironment;
   }
+
+  /**
+   * Get the current token
+   *
+   * @return The current token or null if not set.
+   */
 
   public Token getToken() {
     return mToken;
   }
 
+  /**
+   * Set the token used for requests.
+   *
+   * @param token token used for authenticating requests made with the
+   *              wrapper.
+   */
   public void setToken(Token token) {
     mToken = token;
   }
 
+  /**
+   * Set the redirect uri used for generating an authentication url
+   * and for obtaining a token.
+   *
+   * @param redirectURI Redirection uri for requesting tokens
+   */
   public void setRedirectURI(URI redirectURI) {
     mRedirectURI = redirectURI;
   }
 
-  public URL getAuthorizationURL() {
-    return getAuthorizationURL(null);
+  /**
+   * Set the mScope for which to ask authorization.
+   *
+   * Affects getAuthorizationURL() and obtainToken().
+   *
+   * @param scope mScope to ask permission for
+   */
+  public void setScope(String scope) {
+    mScope = scope;
   }
 
-  public URL getAuthorizationURL(String scope) {
+  /**
+   * Construct a url to where the user can authenticate the wrapper.
+   *
+   * @return The url or null if no redirect uri is set or if it is invalid.
+   */
+  public URL getAuthorizationURL() {
     if(mRedirectURI == null) {
-      throw new RuntimeException("Redirect URI must be set before calling getAuthorizationURL()");
+      return null;
     }
+
     try {
-      String template = "%s/oauth/authorize?response_type=code&client_id=%s&redirect_uri=%s";
+      String template = "%s/oauth/authorize?response_type=mCode&client_id=%s&redirect_uri=%s";
       String authorizeURL = String.format(template, mEnvironment.getWebHost().toURI(), mClientId, mRedirectURI.toString());
 
-      if(scope != null) {
-        authorizeURL += "&scope=" + scope;
+      if(mScope != null) {
+        authorizeURL += "&mScope=" + mScope;
       }
 
       return URI.create(authorizeURL).toURL();
@@ -90,11 +137,22 @@ public class ReadmillWrapper {
     }
   }
 
-  public Token obtainToken(String authorizationCode) {
-    return obtainToken(authorizationCode, null);
+  public Authorization createAuthorization(URI redirectUri, String scope) {
+    Authorization auth = new Authorization(mClientId, mEnvironment.getWebHost().toURI());
+    auth.setRedirectURI(redirectUri);
+    if(scope != null) {
+      auth.setScope(scope);
+    }
+    return auth;
   }
 
-  public Token obtainToken(String authorizationCode, String scope) {
+  /**
+   * Obtain a token by providing an authorization mCode.
+   *
+   * @param authorizationCode Authorization mCode to exhange for a token
+   * @return The obtained token or null
+   */
+  public Token obtainToken(String authorizationCode) {
     if(mRedirectURI == null) {
       throw new RuntimeException("Redirect URI must be set before calling obtainToken()");
     }
@@ -105,12 +163,12 @@ public class ReadmillWrapper {
         "grant_type", "authorization_code",
         "client_id", mClientId,
         "client_secret", mClientSecret,
-        "code", authorizationCode,
+        "mCode", authorizationCode,
         "redirect_uri", mRedirectURI
     );
 
-    if(scope != null) {
-      obtainRequest.withParams("scope", scope);
+    if(mScope != null) {
+      obtainRequest.withParams("mScope", mScope);
     }
 
     try {
