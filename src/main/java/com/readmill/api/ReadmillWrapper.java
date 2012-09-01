@@ -253,6 +253,53 @@ public class ReadmillWrapper {
     return new RequestBuilder(this, HttpPut.class, uri);
   }
 
+
+  /**
+   * Sends a request as GET.
+   *
+   * @param request Request to send
+   * @return The HttpResponse
+   * @throws IOException if a network error occurred
+   */
+  public HttpResponse get(Request request) throws IOException {
+    return execute(request, HttpGet.class);
+  }
+
+  /**
+   * Sends a request as PUT.
+   *
+   * @param request Request to send
+   * @return The HttpResponse
+   * @throws IOException if a network error occurred
+   */
+  public HttpResponse put(Request request) throws IOException {
+    return execute(request, HttpPut.class);
+  }
+
+  /**
+   * Sends a request as POST.
+   *
+   * @param request Request to send
+   * @return The HttpResponse
+   * @throws IOException if a network error occurred
+   */
+  public HttpResponse post(Request request) throws IOException {
+    return execute(request, HttpPost.class);
+  }
+
+  /**
+   * Sends a request as DELETE.
+   *
+   * @param request Request to send
+   * @return The HttpResponse
+   * @throws IOException if a network error occurred
+   */
+  public HttpResponse delete(Request request) throws IOException {
+    return execute(request, HttpDelete.class);
+  }
+
+
+
   /*
    * Protected
    */
