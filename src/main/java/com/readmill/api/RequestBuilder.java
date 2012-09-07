@@ -276,7 +276,7 @@ public class RequestBuilder {
 
   // The number of results to return. Default is 20, max 100.
   // Example value: 75
-  public RequestBuilder count(int value) {
+  public RequestBuilder count(long value) {
     return args("count", value);
   }
 
@@ -336,13 +336,13 @@ public class RequestBuilder {
 
   // Only include readings which have equal or more highlights.
   // Example value: 8
-  public RequestBuilder highlightsCountFrom(int value) {
+  public RequestBuilder highlightsCountFrom(long value) {
     return args("highlights_count[from]", value);
   }
 
   // Only include readings which have less or equal highlights.
   // Example value: 10
-  public RequestBuilder highlightsCountTo(int value) {
+  public RequestBuilder highlightsCountTo(long value) {
     return args("highlights_count[to]", value);
   }
 
@@ -362,7 +362,7 @@ public class RequestBuilder {
 
   // The duration of the reading session. In seconds.
   // Example value: 500
-  public RequestBuilder pingDuration(int value) {
+  public RequestBuilder pingDuration(long value) {
     return args("ping[duration]", value);
   }
 
@@ -501,7 +501,7 @@ public class RequestBuilder {
   // If the reading was recommended by another user you can credit them by
   // including their user id.
   // Example value: 9
-  public RequestBuilder readingViaId(int value) {
+  public RequestBuilder readingViaId(long value) {
     return args("reading[via_id]", value);
   }
 
