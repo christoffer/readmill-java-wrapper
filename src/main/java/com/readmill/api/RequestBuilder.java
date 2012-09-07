@@ -144,7 +144,8 @@ public class RequestBuilder {
    * Readmill collection objects are objects with a top level key "items" that
    * contains an array of the objects in the collection.
    * <p/>
-   * For example:
+   * Readmill response example:
+   * <pre>
    * <code>
    * {
    * "items": [
@@ -153,6 +154,7 @@ public class RequestBuilder {
    * ]
    * }
    * </code>
+   * </pre>
    *
    * @return The parsed JSONArray.
    * @throws java.io.IOException    If the request failed
@@ -177,6 +179,7 @@ public class RequestBuilder {
    * collection have the same type.
    * <p/>
    * For example, if calling fetchItems("book"), then this will parse correctly:
+   * <pre>
    * <code>
    * {
    * "items": [
@@ -186,17 +189,19 @@ public class RequestBuilder {
    * }
    * # => JSONArray with {id: 1} and {id: 2}
    * </code>
-   * but this won't:
+   * </pre>
+   * but this will fail since the top level objecst are not the same:
+   * <pre>
    * <code>
    * {
-   * "items": [
-   * { "book": { id: 1 } },
-   * { "reading": { "id": 1 } }
-   * ]
+   *   "items": [
+   *     { "book": { id: 1 } },
+   *     { "reading": { "id": 1 } }
+   *   ]
    * }
    * # => null
    * </code>
-   *
+   * </pre>
    * @param key Top level key of objects to unwrap
    * @return The parsed JSONArray or null if the request failed, or the response
    *         was not properly formatted.

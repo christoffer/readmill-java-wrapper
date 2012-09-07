@@ -157,7 +157,7 @@ public class ReadmillWrapper {
   /**
    * Obtains a token by providing an authorization code.
    * <p/>
-   * Uses the redirect uri and scope set on the wrapper with #setRedirectURI()
+   * Uses the redirect uri and scope set on the wrapper with setRedirectURI()
    * and #setScope().
    * <p/>
    * Obtaining a token only works for an authorization code that was requested
