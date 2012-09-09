@@ -72,4 +72,11 @@ public class Environment {
   public String getWebUrl() {
     return mWebHost.toString();
   }
+
+  @Override
+  public String toString() {
+    return "Readmill Server Environment" +
+        " with API server: " + getApiUrl() +
+        " and Web server: " + getWebUrl();
+  }
 }
