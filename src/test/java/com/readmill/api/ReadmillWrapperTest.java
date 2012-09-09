@@ -159,7 +159,7 @@ public class ReadmillWrapperTest {
     mWrapper = Mockito.spy(mWrapper);
     Mockito.doReturn(tokenJSON).when(mWrapper).getResponseText(requestArgument.capture(), Mockito.eq(HttpPost.class));
 
-    Token obtainedToken = mWrapper.obtainTokenThrows("authcode2000");
+    Token obtainedToken = mWrapper.obtainTokenOrThrow("authcode2000");
 
     URI sentRequest = URI.create(requestArgument.getValue().toUrl());
 
@@ -197,7 +197,7 @@ public class ReadmillWrapperTest {
     mWrapper = Mockito.spy(mWrapper);
     Mockito.doReturn(tokenJSON).when(mWrapper).getResponseText(requestArgument.capture(), Mockito.eq(HttpPost.class));
 
-    mWrapper.obtainTokenThrows("my-code");
+    mWrapper.obtainTokenOrThrow("my-code");
 
     URI sentRequest = URI.create(requestArgument.getValue().toUrl());
     assertThat(sentRequest.getQuery(), containsString("scope=non-expiring"));

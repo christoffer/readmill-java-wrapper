@@ -141,11 +141,11 @@ public class ReadmillWrapper {
    *
    * @param authorizationCode Authorization code
    * @return The obtained token or null
-   * @see #obtainTokenThrows(String)
+   * @see #obtainTokenOrThrow(String)
    */
   public Token obtainToken(String authorizationCode) {
     try {
-      return obtainTokenThrows(authorizationCode);
+      return obtainTokenOrThrow(authorizationCode);
     } catch(IOException e) {
       e.printStackTrace();
     } catch(JSONException e) {
@@ -168,7 +168,7 @@ public class ReadmillWrapper {
    * @throws IOException if a network error occurs
    * @throws JSONException if the response was not proper json
    */
-  public Token obtainTokenThrows(String authorizationCode) throws IOException, JSONException {
+  public Token obtainTokenOrThrow(String authorizationCode) throws IOException, JSONException {
     if(mRedirectURI == null) {
       throw new RuntimeException("Redirect URI must be set before calling obtainToken()");
     }
