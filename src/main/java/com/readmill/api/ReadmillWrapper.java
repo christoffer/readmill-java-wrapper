@@ -31,6 +31,11 @@ public class ReadmillWrapper {
   private String mScope;
 
   /**
+   * A list of clients that are interested to know when the token has changed.
+   */
+  private TokenChangeListener mTokenChangeListener;
+
+  /**
    * Creates a wrapper for a given client and environment.
    *
    * @param clientId     Client Identifier
@@ -83,11 +88,22 @@ public class ReadmillWrapper {
   /**
    * Sets the token used for requests.
    *
-   * @param token token used for authenticating requests made with the
-   *              wrapper.
+   * @param token token used for authenticating requests.
    */
   public void setToken(Token token) {
     mToken = token;
+    if(mTokenChangeListener != null) {
+      mTokenChangeListener.onTokenChanged(token);
+    }
+  }
+
+  /**
+   * Sets the current token change listener.
+   *
+   * @param listener The client that receives notifications about token changes.
+   */
+  public void setTokenChangeListener(TokenChangeListener listener) {
+    mTokenChangeListener = listener;
   }
 
   /**
@@ -165,7 +181,7 @@ public class ReadmillWrapper {
    *
    * @param authorizationCode The authorization code
    * @return The obtained token
-   * @throws IOException if a network error occurs
+   * @throws IOException   if a network error occurs
    * @throws JSONException if the response was not proper json
    */
   public Token obtainTokenOrThrow(String authorizationCode) throws IOException, JSONException {
@@ -299,10 +315,9 @@ public class ReadmillWrapper {
   }
 
 
-
   /*
-   * Protected
-   */
+  * Protected
+  */
 
   /**
    * Executes a request with a provided HTTP verb.
