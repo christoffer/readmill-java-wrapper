@@ -220,6 +220,24 @@ public class RequestBuilder {
   }
 
   /**
+   * Alias for #fetch() that does not return a value.
+   */
+  public void send() {
+    fetch();
+  }
+
+  /**
+   * Alias for fetchOrThrow() that does not return a value.
+   *
+   * @throws IOException when the request was not successful.
+   * @throws JSONException if the server did not provide an expected response
+   */
+  public void sendOrThrow() throws IOException, JSONException {
+    fetchItemsOrThrow();
+  }
+
+
+  /**
    * Executes the built request and returns the text body of the response.
    *
    * @return The text body of the response.
