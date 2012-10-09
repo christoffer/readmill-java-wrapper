@@ -10,6 +10,8 @@ Wrapper around the Readmill API version 2.
 
 Code is *heavily* inspired by the excellent [Java wrapper for SoundCloud](https://github.com/soundcloud/java-api-wrapper).
 
+A short tutorial is available [here](https://github.com/christoffer/readmill-java-wrapper/wiki/Short-tutorial)
+
 Example usage:
 
 ```java
