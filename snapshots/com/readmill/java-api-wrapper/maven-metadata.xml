@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>com.readmill</groupId>
+  <artifactId>java-api-wrapper</artifactId>
+  <versioning>
+    <release>0.1</release>
+    <versions>
+      <version>0.1</version>
+    </versions>
+    <lastUpdated>20121009193349</lastUpdated>
+  </versioning>
+</metadata>
