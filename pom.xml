@@ -3,13 +3,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.readmill</groupId>
-  <artifactId>java-api-wrapper</artifactId>
+  <groupId>com.christofferklang</groupId>
+  <artifactId>readmill-java-wrapper</artifactId>
   <version>0.1</version>
   <packaging>jar</packaging>
 
-  <name>java-api-wrapper</name>
-  <url>http://github.readmill.com</url>
+  <name>readmill-java-wrapper</name>
+  <url>https://github.com/christoffer/readmill-java-wrapper</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
