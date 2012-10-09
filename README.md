@@ -4,6 +4,8 @@ Not all functionality mentioned below is necessarily implemented or working corr
 
 This note will be removed when the first stable version is done.
 
+TODO Add note about maven
+
 # Readmill API V2 Wrapper
 
 Wrapper around the Readmill API version 2.
