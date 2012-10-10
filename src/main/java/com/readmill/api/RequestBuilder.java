@@ -582,6 +582,11 @@ public class RequestBuilder {
     return this;
   }
 
+  private RequestBuilder args(String key, long value) {
+    mRequest.withParams(key, value);
+    return this;
+  }
+
   private RequestBuilder args(String key, boolean value) {
     mRequest.withParams(key, value ? "true" : "false");
     return this;
