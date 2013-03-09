@@ -5,7 +5,7 @@
 
   <groupId>com.christofferklang</groupId>
   <artifactId>readmill-java-wrapper</artifactId>
-  <version>0.1</version>
+  <version>1.0</version>
   <packaging>jar</packaging>
 
   <name>readmill-java-wrapper</name>
@@ -41,19 +41,21 @@
       <groupId>org.json</groupId>
       <artifactId>json</artifactId>
       <version>20090211</version>
-      <scope>compile</scope>
+      <scope>provided</scope>
     </dependency>
+
     <dependency>
       <groupId>org.apache.httpcomponents</groupId>
       <artifactId>httpmime</artifactId>
       <version>4.0.3</version>
-      <scope>compile</scope>
+      <scope>provided</scope>
     </dependency>
+
     <dependency>
       <groupId>org.apache.httpcomponents</groupId>
       <artifactId>httpclient</artifactId>
       <version>4.0.3</version>
-      <scope>compile</scope>
+      <scope>provided</scope>
     </dependency>
   </dependencies>
 
