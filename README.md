@@ -74,6 +74,6 @@ And then list the dependency like this:
 <dependency>
   <groupId>com.christofferklang</groupId>
   <artifactId>readmill-java-wrapper</artifactId>
-  <version>0.1</version>
+  <version>1.0</version>
 </dependency>
 ```
