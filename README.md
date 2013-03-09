@@ -1,6 +1,6 @@
 # Readmill API V2 Wrapper
 
-Low level wrapper around the Readmill API version 2.
+Low level wrapper around the [Readmill API](http://developers.readmill.com/).
 
 Code is *heavily* inspired by the excellent [Java wrapper for SoundCloud](https://github.com/soundcloud/java-api-wrapper).
 
