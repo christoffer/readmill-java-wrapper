@@ -6,7 +6,7 @@ Code is *heavily* inspired by the excellent [Java wrapper for SoundCloud](https:
 
 A short tutorial is available [here](https://github.com/christoffer/readmill-java-wrapper/wiki/Short-tutorial). Project page on [GitHub](https://github.com/christoffer/readmill-java-wrapper).
 
-Example usage:
+Example basic usage:
 
 ```java
   ReadmillWrapper wrapper = new ReadmillWrapper("my_client_id", "my_client_secret", Environment.LIVE);
@@ -20,7 +20,7 @@ Example usage:
                          .fetchItems("reading") // => an array of readings
 ```
 
-For authenticated requests you need to obtain an access token.
+Authenticated requests that uses a token:
 
 ```java
   ReadmillWrapper wrapper = new ReadmillWrapper("my_client_id", "my_client_secret", Environment.LIVE);
@@ -32,13 +32,14 @@ For authenticated requests you need to obtain an access token.
   reading = wrapper.post("/books/20461/readings").readingState("reading").fetch("reading");
 
   // Update
-  wrapper.put("/readings/" + reading.getInt("id")).readingState("finished").fetch();
+  String readingEndpoint = String.format("/readings/%d", reading.getInt("id"));
+  wrapper.put(readingEndpoint).readingState("finished").fetch();
 
   // Delete
-  wrapper.delete("/readings/" + reading.getInt("id")).fetch();
+  wrapper.delete(readingEndpoint).send(); // .send() is just .fetch() without a return value
 ```
 
-You can also drop down to a more manual level and build the requests yourself:
+You can also drop down to a more manual level with finer control of requets building:
 
 ```java
   ReadmillWrapper wrapper = new ReadmillWrapper("my_client_id", "my_client_secret", Environment.LIVE);
