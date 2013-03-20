@@ -20,11 +20,11 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 
-@SuppressWarnings("UnusedDeclaration")
 public class ReadmillWrapper {
+	
   private String mClientId;
   private String mClientSecret;
-  private Environment mEnvironment;
+  private Environment mEnv;
   private Token mToken;
   private HttpClient mHttpClient;
   private URI mRedirectURI;
@@ -33,7 +33,7 @@ public class ReadmillWrapper {
   /**
    * A list of clients that are interested to know when the token has changed.
    */
-  private TokenChangeListener mTokenChangeListener;
+  private TokenChangeListener mTokenListener;
 
   /**
    * Creates a wrapper for a given client and environment.
@@ -45,9 +45,9 @@ public class ReadmillWrapper {
   public ReadmillWrapper(String clientId, String clientSecret, Environment env) {
     mClientId = clientId;
     mClientSecret = clientSecret;
-    mEnvironment = env;
+    mEnv = env;
   }
-
+   
   /**
    * Gets the current client id
    *
@@ -72,7 +72,7 @@ public class ReadmillWrapper {
    * @return The current environment or null if not set.
    */
   public Environment getEnvironment() {
-    return mEnvironment;
+    return mEnv;
   }
 
   /**
@@ -92,8 +92,8 @@ public class ReadmillWrapper {
    */
   public void setToken(Token token) {
     mToken = token;
-    if(mTokenChangeListener != null) {
-      mTokenChangeListener.onTokenChanged(token);
+    if(mTokenListener != null) {
+      mTokenListener.onTokenChanged(token);
     }
   }
 
@@ -103,7 +103,7 @@ public class ReadmillWrapper {
    * @param listener The client that receives notifications about token changes.
    */
   public void setTokenChangeListener(TokenChangeListener listener) {
-    mTokenChangeListener = listener;
+    mTokenListener = listener;
   }
 
   /**
@@ -139,7 +139,7 @@ public class ReadmillWrapper {
 
     try {
       String template = "%s/oauth/authorize?response_type=code&client_id=%s&redirect_uri=%s";
-      String authorizeURL = String.format(template, mEnvironment.getWebHost().toURI(), mClientId, mRedirectURI.toString());
+      String authorizeURL = String.format(template, mEnv.getWebHost().toURI(), mClientId, mRedirectURI.toString());
 
       if(mScope != null) {
         authorizeURL += "&scope=" + mScope;
@@ -189,7 +189,7 @@ public class ReadmillWrapper {
       throw new RuntimeException("Redirect URI must be set before calling obtainToken()");
     }
 
-    String resourceUrl = String.format("%s/oauth/token", mEnvironment.getWebHost());
+    String resourceUrl = String.format("%s/oauth/token", mEnv.getWebHost());
 
     Request obtainRequest = Request.to(resourceUrl).withParams(
         "grant_type", "authorization_code",
@@ -207,6 +207,69 @@ public class ReadmillWrapper {
     JSONObject tokenJson = new JSONObject(tokenResponse);
     return new Token(tokenJson);
   }
+  
+  /**
+   * Returns a token using direct username and password credentials.
+   * 
+   * Returns The token granted or null if the credentials were declined.
+   * 
+   */
+  public Token login(String username, String password) 
+		  throws IOException, JSONException {
+      if (username == null || password == null) {
+          throw new IllegalArgumentException("username or password is null");
+      }
+      
+      String resourceUrl = String.format("%s/oauth/token", mEnv.getWebHost());
+
+      final Request obtainRequest = Request.to(resourceUrl).withParams(
+              "grant_type", "password",
+              "client_id", mClientId,
+              "client_secret", mClientSecret,
+              "username", username,
+              "password", password);
+          
+      if(mScope != null) {
+          obtainRequest.withParams("scope", mScope);
+      }
+
+    String tokenResponse = getResponseText(obtainRequest, HttpPost.class);
+    JSONObject tokenJson = new JSONObject(tokenResponse);
+    return new Token(tokenJson);
+
+  }
+  
+  /**
+   * Request an OAuth2 token from Readmill
+   * @param  request the token request
+   * @return the token
+   * @throws java.io.IOException network error
+   * @throws com.ReadmillAPI.api.CloudAPI.InvalidTokenException unauthorized
+   * @throws com.ReadmillAPI.api.CloudAPI.ApiResponseException http error
+   */
+//  protected Token requestToken(Request request) throws IOException {
+//	  
+//      HttpResponse response = safeExecute(mEnv.getApiUrl(), request.build(HttpPost.class));
+//      final int status = response.getStatusLine().getStatusCode();
+//
+//      String error = null;
+//      try {
+//          if (status == HttpStatus.SC_OK) {
+//              final Token token = new Token(Http.getJSON(response));
+//              if (mTokenListener != null) mTokenListener.onTokenChanged(token);
+//              return token;
+//          } else {
+//              error = Http.getJSON(response).getString("error");
+//          }
+//      } catch (IOException ignored) {
+//          error = ignored.getMessage();
+//      } catch (JSONException ignored) {
+//          error = ignored.getMessage();
+//      }
+//      throw status == HttpStatus.SC_UNAUTHORIZED ?
+//              new InvalidTokenException(status, error) :
+//              new ApiResponseException(response, error);
+//  }
 
   /**
    * Gets the http client used to make requests.
@@ -385,7 +448,7 @@ public class ReadmillWrapper {
    * @return The resolved HttpHost
    */
   private HttpHost resolveTarget(Request request) {
-    URI uri = URI.create(mEnvironment.getApiHost().toURI()).resolve(request.toUrl());
+    URI uri = URI.create(mEnv.getApiHost().toURI()).resolve(request.toUrl());
     return new HttpHost(uri.getHost(), uri.getPort(), uri.getScheme());
   }
 }
