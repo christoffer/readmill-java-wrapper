@@ -214,29 +214,27 @@ public class ReadmillWrapper {
    * Returns The token granted or null if the credentials were declined.
    * 
    */
-  public Token login(String username, String password) 
-		  throws IOException, JSONException {
-      if (username == null || password == null) {
-          throw new IllegalArgumentException("username or password is null");
-      }
-      
-      String resourceUrl = String.format("%s/oauth/token", mEnv.getWebHost());
+  public Token login(String username, String password) throws IOException, JSONException {
+  	if (username == null || password == null) {
+  		throw new IllegalArgumentException("username or password is null");
+  	}
 
-      final Request obtainRequest = Request.to(resourceUrl).withParams(
-              "grant_type", "password",
-              "client_id", mClientId,
-              "client_secret", mClientSecret,
-              "username", username,
-              "password", password);
-          
-      if(mScope != null) {
-          obtainRequest.withParams("scope", mScope);
-      }
+  	String resourceUrl = String.format("%s/oauth/token", mEnv.getWebHost());
 
-    String tokenResponse = getResponseText(obtainRequest, HttpPost.class);
-    JSONObject tokenJson = new JSONObject(tokenResponse);
-    return new Token(tokenJson);
+  	final Request obtainRequest = Request.to(resourceUrl).withParams(
+  			"grant_type", "password",
+  			"client_id", mClientId,
+  			"client_secret", mClientSecret,
+  			"username", username,
+  			"password", password);
 
+  	if(mScope != null) {
+  		obtainRequest.withParams("scope", mScope);
+  	}
+
+  	String tokenResponse = getResponseText(obtainRequest, HttpPost.class);
+  	JSONObject tokenJson = new JSONObject(tokenResponse);
+  	return new Token(tokenJson);
   }
   
   /**
