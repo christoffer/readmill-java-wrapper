@@ -209,9 +209,16 @@ public class ReadmillWrapper {
   }
   
   /**
-   * Returns a token using direct username and password credentials.
+   * Obtains a token by providing username and password credentials.
+   * <p>
+   * Uses scope set on the wrapper with #setScope().
+   * </p>
    * 
-   * Returns The token granted or null if the credentials were declined.
+   * @param username The Readmill account username (email address)
+   * @param password The account password
+   * @return The obtained token
+   * @throws IOException   if a network error occurs
+   * @throws JSONException if the response was not proper json
    * 
    */
   public Token login(String username, String password) throws IOException, JSONException {
@@ -237,38 +244,6 @@ public class ReadmillWrapper {
   	return new Token(tokenJson);
   }
   
-  /**
-   * Request an OAuth2 token from Readmill
-   * @param  request the token request
-   * @return the token
-   * @throws java.io.IOException network error
-   * @throws com.ReadmillAPI.api.CloudAPI.InvalidTokenException unauthorized
-   * @throws com.ReadmillAPI.api.CloudAPI.ApiResponseException http error
-   */
-//  protected Token requestToken(Request request) throws IOException {
-//	  
-//      HttpResponse response = safeExecute(mEnv.getApiUrl(), request.build(HttpPost.class));
-//      final int status = response.getStatusLine().getStatusCode();
-//
-//      String error = null;
-//      try {
-//          if (status == HttpStatus.SC_OK) {
-//              final Token token = new Token(Http.getJSON(response));
-//              if (mTokenListener != null) mTokenListener.onTokenChanged(token);
-//              return token;
-//          } else {
-//              error = Http.getJSON(response).getString("error");
-//          }
-//      } catch (IOException ignored) {
-//          error = ignored.getMessage();
-//      } catch (JSONException ignored) {
-//          error = ignored.getMessage();
-//      }
-//      throw status == HttpStatus.SC_UNAUTHORIZED ?
-//              new InvalidTokenException(status, error) :
-//              new ApiResponseException(response, error);
-//  }
-
   /**
    * Gets the http client used to make requests.
    *
