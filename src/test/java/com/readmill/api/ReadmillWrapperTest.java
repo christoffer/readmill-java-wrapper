@@ -184,11 +184,11 @@ public class ReadmillWrapperTest {
   @Test
   public void obtainTokenThrowsWithScope() throws IOException, JSONException {
     String tokenJSON = "{" +
-        "\"access_token\":  \"04u7h-4cc355-70k3n\"," +
-        "\"expires_in\":    3600," +
-        "\"scope\":         \"\"," +
-        "\"refresh_token\": \"04u7h-r3fr35h-70k3n\"" +
-        "}";
+      "\"access_token\":  \"04u7h-4cc355-70k3n\"," +
+      "\"expires_in\":    3600," +
+      "\"scope\":         \"\"," +
+      "\"refresh_token\": \"04u7h-r3fr35h-70k3n\"" +
+      "}";
 
     URI redirectURI = URI.create("http://wrappertest.com/callback");
     mWrapper.setRedirectURI(redirectURI);
@@ -205,37 +205,37 @@ public class ReadmillWrapperTest {
   
   @Test
   public void obtainTokenLogin() throws IOException, JSONException {
-  	String tokenJSON = "{" +
-  			"\"access_token\":  \"04u7h-4cc355-70k3n\"," +
-  			"\"expires_in\":    3600," +
-  			"\"scope\":         \"\"," +
-  			"\"refresh_token\": \"04u7h-r3fr35h-70k3n\"" +
-  			"}";
+    String tokenJSON = "{" +
+      "\"access_token\":  \"04u7h-4cc355-70k3n\"," +
+      "\"expires_in\":    3600," +
+      "\"scope\":         \"\"," +
+      "\"refresh_token\": \"04u7h-r3fr35h-70k3n\"" +
+      "}";
 
-  	ArgumentCaptor<Request> requestArgument = ArgumentCaptor.forClass(Request.class);
-  	mWrapper = Mockito.spy(mWrapper);
-  	Mockito.doReturn(tokenJSON).when(mWrapper).getResponseText(requestArgument.capture(), Mockito.eq(HttpPost.class));
+    ArgumentCaptor<Request> requestArgument = ArgumentCaptor.forClass(Request.class);
+    mWrapper = Mockito.spy(mWrapper);
+    Mockito.doReturn(tokenJSON).when(mWrapper).getResponseText(requestArgument.capture(), Mockito.eq(HttpPost.class));
 
-  	Token obtainedToken = mWrapper.login("testusername", "testpassword");
+    Token obtainedToken = mWrapper.login("testusername", "testpassword");
 
-  	URI sentRequest = URI.create(requestArgument.getValue().toUrl());
+    URI sentRequest = URI.create(requestArgument.getValue().toUrl());
 
-  	// Assert that request was sent to correct place
-  	assertThat(sentRequest.toString(), startsWith("https://www.example.com"));
-  	assertThat(sentRequest.getPath(), is("/oauth/token"));
+    // Assert that request was sent to correct place
+    assertThat(sentRequest.toString(), startsWith("https://www.example.com"));
+    assertThat(sentRequest.getPath(), is("/oauth/token"));
 
-  	// ... with correct parameters
-  	assertThat(sentRequest.getQuery(), containsString("grant_type=password"));	    
-  	assertThat(sentRequest.getQuery(), containsString("client_id=my_client_id"));
-  	assertThat(sentRequest.getQuery(), containsString("client_secret=my_client_secret"));
-  	assertThat(sentRequest.getQuery(), containsString("username=testusername"));
-  	assertThat(sentRequest.getQuery(), containsString("password=testpassword"));
-  	assertThat(sentRequest.getQuery(), not(containsString("scope=")));
+    // ... with correct parameters
+    assertThat(sentRequest.getQuery(), containsString("grant_type=password"));	    
+    assertThat(sentRequest.getQuery(), containsString("client_id=my_client_id"));
+    assertThat(sentRequest.getQuery(), containsString("client_secret=my_client_secret"));
+    assertThat(sentRequest.getQuery(), containsString("username=testusername"));
+    assertThat(sentRequest.getQuery(), containsString("password=testpassword"));
+    assertThat(sentRequest.getQuery(), not(containsString("scope=")));
 
-  	// ... and got correct token
-  	Token expectedToken = new Token(new JSONObject(tokenJSON));
+    // ... and got correct token
+    Token expectedToken = new Token(new JSONObject(tokenJSON));
 
-  	assertThat(obtainedToken, equalTo(expectedToken));
+    assertThat(obtainedToken, equalTo(expectedToken));
   }
 
   @Test

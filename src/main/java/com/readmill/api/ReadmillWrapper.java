@@ -21,7 +21,6 @@ import java.net.URI;
 import java.net.URL;
 
 public class ReadmillWrapper {
-	
   private String mClientId;
   private String mClientSecret;
   private Environment mEnv;
@@ -47,7 +46,7 @@ public class ReadmillWrapper {
     mClientSecret = clientSecret;
     mEnv = env;
   }
-   
+
   /**
    * Gets the current client id
    *
@@ -210,9 +209,8 @@ public class ReadmillWrapper {
   
   /**
    * Obtains a token by providing username and password credentials.
-   * <p>
+   * <p/>
    * Uses scope set on the wrapper with #setScope().
-   * </p>
    * 
    * @param username The Readmill account username (email address)
    * @param password The account password
@@ -222,26 +220,27 @@ public class ReadmillWrapper {
    * 
    */
   public Token login(String username, String password) throws IOException, JSONException {
-  	if (username == null || password == null) {
-  		throw new IllegalArgumentException("username or password is null");
-  	}
+    if (username == null || password == null) {
+      throw new IllegalArgumentException("username or password is null");
+    }
 
-  	String resourceUrl = String.format("%s/oauth/token", mEnv.getWebHost());
+    String resourceUrl = String.format("%s/oauth/token", mEnv.getWebHost());
 
-  	final Request obtainRequest = Request.to(resourceUrl).withParams(
-  			"grant_type", "password",
-  			"client_id", mClientId,
-  			"client_secret", mClientSecret,
-  			"username", username,
-  			"password", password);
+    final Request obtainRequest = Request.to(resourceUrl).withParams(
+      "grant_type", "password",
+      "client_id", mClientId,
+      "client_secret", mClientSecret,
+      "username", username,
+      "password", password
+    );
 
-  	if(mScope != null) {
-  		obtainRequest.withParams("scope", mScope);
-  	}
+    if(mScope != null) {
+      obtainRequest.withParams("scope", mScope);
+    }
 
-  	String tokenResponse = getResponseText(obtainRequest, HttpPost.class);
-  	JSONObject tokenJson = new JSONObject(tokenResponse);
-  	return new Token(tokenJson);
+    String tokenResponse = getResponseText(obtainRequest, HttpPost.class);
+    JSONObject tokenJson = new JSONObject(tokenResponse);
+    return new Token(tokenJson);
   }
   
   /**
@@ -384,7 +383,7 @@ public class ReadmillWrapper {
   /**
    * Adds the strongest available authorization to a request.
    * <p/>
-   * Order of authentication strengths (strongest to weakest)
+   * Order of authentication strenghts (strongest to weakest)
    * <p/>
    * - Token assigned to the Request
    * - Token assigned to the wrapper
