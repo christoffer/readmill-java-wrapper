@@ -44,7 +44,8 @@ public class Request {
 
   /**
    * Constructs a request to a given resource, optionally formatted with any
-   * number of parameters.
+   * number of parameters. The resource is interpreted as a format string
+   * if arguments are provided.
    *
    * The following calls are equivalent:
    *
