@@ -50,7 +50,7 @@ You can also drop down to a more manual level with finer control of requets buil
                                  .withParams("state", "finished", "reading[via]", 1)
                                  .usingToken(userToken);
 
-  HTTPResponse response = wrapper.put(updateReadingState).fetch();
+  HTTPResponse response = wrapper.put(updateReadingState);
 ```
 
 ## Maven
