@@ -36,22 +36,22 @@ public class MockHttpClient implements HttpClient {
 
   @Override
   public HttpResponse execute(HttpUriRequest httpUriRequest) throws IOException, ClientProtocolException {
-    return riggedResponse();
+    return mockedResponse();
   }
 
   @Override
   public HttpResponse execute(HttpUriRequest httpUriRequest, HttpContext httpContext) throws IOException, ClientProtocolException {
-    return riggedResponse();
+    return mockedResponse();
   }
 
   @Override
   public HttpResponse execute(HttpHost httpHost, HttpRequest httpRequest) throws IOException, ClientProtocolException {
-    return riggedResponse();
+    return mockedResponse();
   }
 
   @Override
   public HttpResponse execute(HttpHost httpHost, HttpRequest httpRequest, HttpContext httpContext) throws IOException, ClientProtocolException {
-    return riggedResponse();
+    return mockedResponse();
   }
 
   // Generic execute methods not currently supported
@@ -140,7 +140,7 @@ public class MockHttpClient implements HttpClient {
     }
   }
 
-  private HttpResponse riggedResponse() throws IOException {
+  private HttpResponse mockedResponse() throws IOException {
     if(mRaiseIOException) {
       throw new IOException();
     }
