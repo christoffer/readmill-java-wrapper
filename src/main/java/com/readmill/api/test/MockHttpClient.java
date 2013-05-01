@@ -111,24 +111,37 @@ public class MockHttpClient implements HttpClient {
    *
    * @param statusCode Status code for the fake response.
    */
-  private HttpResponse createMockResponse(int statusCode) {
+  public static HttpResponse createMockResponse(int statusCode) {
     String reasonPhrase = EnglishReasonPhraseCatalog.INSTANCE.getReason(statusCode, Locale.ENGLISH);
     return new BasicHttpResponse(HttpVersion.HTTP_1_1, statusCode, reasonPhrase);
   }
 
   /**
+   * Creates a fake http response with the given status code and body.
+   * Response phrase is taken from the standard english catalog.
+   *
+   * @param statusCode Status code for the fake response.
+   */
+  public static HttpResponse createMockResponse(int statusCode, String responseText) {
+    String reasonPhrase = EnglishReasonPhraseCatalog.INSTANCE.getReason(statusCode, Locale.ENGLISH);
+    BasicHttpResponse response = new BasicHttpResponse(HttpVersion.HTTP_1_1, statusCode, reasonPhrase);
+    response.setEntity(getStringEntity(responseText));
+    return response;
+  }
+
+  /**
    * Creates a simple StringEntity with the given text.
    */
-  private HttpEntity getStringEntity(String responseText) {
+  private static HttpEntity getStringEntity(String responseText) {
     try {
       return new StringEntity(responseText);
-    } catch (UnsupportedEncodingException e) {
+    } catch(UnsupportedEncodingException e) {
       throw new RuntimeException("Failed to create a http string response entity", e);
     }
   }
 
   private HttpResponse riggedResponse() throws IOException {
-    if (mRaiseIOException) {
+    if(mRaiseIOException) {
       throw new IOException();
     }
     return mCannedResponse;
