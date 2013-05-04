@@ -22,6 +22,7 @@ import java.util.Locale;
  */
 public class MockHttpClient implements HttpClient {
   private HttpResponse mCannedResponse = createMockResponse(200);
+  private HttpRequest mLastRequest;
   private boolean mRaiseIOException = false;
 
   @Override
@@ -36,21 +37,25 @@ public class MockHttpClient implements HttpClient {
 
   @Override
   public HttpResponse execute(HttpUriRequest httpUriRequest) throws IOException, ClientProtocolException {
+    mLastRequest = httpUriRequest;
     return mockedResponse();
   }
 
   @Override
   public HttpResponse execute(HttpUriRequest httpUriRequest, HttpContext httpContext) throws IOException, ClientProtocolException {
+    mLastRequest = httpUriRequest;
     return mockedResponse();
   }
 
   @Override
   public HttpResponse execute(HttpHost httpHost, HttpRequest httpRequest) throws IOException, ClientProtocolException {
+    mLastRequest = httpRequest;
     return mockedResponse();
   }
 
   @Override
   public HttpResponse execute(HttpHost httpHost, HttpRequest httpRequest, HttpContext httpContext) throws IOException, ClientProtocolException {
+    mLastRequest = httpRequest;
     return mockedResponse();
   }
 
@@ -95,6 +100,15 @@ public class MockHttpClient implements HttpClient {
     resp.setEntity(getStringEntity(responseText));
     mCannedResponse = resp;
     mRaiseIOException = false;
+  }
+
+  /**
+   * Makes the last made request object available for inspection.
+   *
+   * @return the last request or null
+   */
+  public HttpRequest getLastRequest() {
+    return mLastRequest;
   }
 
   /**

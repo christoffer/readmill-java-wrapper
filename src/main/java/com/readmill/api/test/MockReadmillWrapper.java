@@ -2,6 +2,7 @@ package com.readmill.api.test;
 
 import com.readmill.api.Environment;
 import com.readmill.api.ReadmillWrapper;
+import org.apache.http.HttpRequest;
 import org.apache.http.client.HttpClient;
 
 /**
@@ -49,6 +50,13 @@ public class MockReadmillWrapper extends ReadmillWrapper {
    */
   public void respondWithIOException() {
     getMockedClient().respondWithIOException();
+  }
+
+  /**
+   * Access of the last made http request
+   */
+  public HttpRequest getLastRequest() {
+    return getMockedClient().getLastRequest();
   }
 
   private MockHttpClient getMockedClient() {

@@ -1,6 +1,8 @@
 package com.readmill.api.test;
 
+import com.readmill.api.HttpUtils;
 import com.readmill.api.Request;
+import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.util.EntityUtils;
@@ -10,9 +12,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.net.URI;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.fail;
+import static junit.framework.Assert.*;
 
 public class MockReadmillWrapperTest {
   private MockReadmillWrapper mMockWrapper;
@@ -47,5 +49,18 @@ public class MockReadmillWrapperTest {
     } catch (IOException expected) {
       // Succeed
     }
+  }
+
+  @Test
+  public void getLastRequest() throws IOException {
+    assertNull(mMockWrapper.getLastRequest());
+    mMockWrapper.get(Request.to("/unicorns").withParams("cute", "and fierce"));
+
+    HttpRequest request = mMockWrapper.getLastRequest();
+    assertNotNull(request);
+
+    URI requestUri = URI.create(request.getRequestLine().getUri());
+    assertEquals("/v2/unicorns", requestUri.getPath());
+    assertTrue(requestUri.getQuery().contains("cute=and+fierce"));
   }
 }
