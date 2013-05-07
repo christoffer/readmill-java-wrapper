@@ -9,7 +9,7 @@ import org.apache.http.client.HttpClient;
  * Mockable wrapper for use in tests
  */
 public class MockReadmillWrapper extends ReadmillWrapper {
-  private MockHttpClient mMockHttpClient;
+  private MockHttpClient mMockHttpClient = new MockHttpClient();
 
   /**
    * Empty constructor provided for ease of use.
@@ -25,8 +25,8 @@ public class MockReadmillWrapper extends ReadmillWrapper {
   }
 
   @Override
-  public HttpClient getHttpClient() {
-    return getMockedClient();
+  public HttpClient createHttpClient() {
+    return mMockHttpClient;
   }
 
   /**
@@ -35,34 +35,27 @@ public class MockReadmillWrapper extends ReadmillWrapper {
    * @param responseText The mocked text in the response body
    */
   public void respondWithText(String responseText) {
-    getMockedClient().respondWithText(responseText);
+    mMockHttpClient.respondWithText(responseText);
   }
 
   /**
    * Mock the response body and the status code.
    */
   public void respondWithStatusAndText(int httpStatus, String responseText) {
-    getMockedClient().respondWithStatusAndText(httpStatus, responseText);
+    mMockHttpClient.respondWithStatusAndText(httpStatus, responseText);
   }
 
   /**
    * Raise an IOException when attempting to make a request.
    */
   public void respondWithIOException() {
-    getMockedClient().respondWithIOException();
+    mMockHttpClient.respondWithIOException();
   }
 
   /**
    * Access of the last made http request
    */
   public HttpRequest getLastRequest() {
-    return getMockedClient().getLastRequest();
-  }
-
-  private MockHttpClient getMockedClient() {
-    if (mMockHttpClient == null) {
-      mMockHttpClient = new MockHttpClient();
-    }
-    return mMockHttpClient;
+    return mMockHttpClient.getLastRequest();
   }
 }
