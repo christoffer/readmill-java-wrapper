@@ -4,6 +4,8 @@ import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.*;
+import org.apache.http.client.params.HttpClientParams;
+import org.apache.http.conn.ConnectionKeepAliveStrategy;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
@@ -12,6 +14,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
+import org.apache.http.protocol.HttpContext;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -91,7 +94,7 @@ public class ReadmillWrapper {
    */
   public void setToken(Token token) {
     mToken = token;
-    if(mTokenListener != null) {
+    if (mTokenListener != null) {
       mTokenListener.onTokenChanged(token);
     }
   }
@@ -132,7 +135,7 @@ public class ReadmillWrapper {
    * @return The url or null if no redirect uri is set or if it is invalid.
    */
   public URL getAuthorizationURL() {
-    if(mRedirectURI == null) {
+    if (mRedirectURI == null) {
       return null;
     }
 
@@ -140,12 +143,12 @@ public class ReadmillWrapper {
       String template = "%s/oauth/authorize?response_type=code&client_id=%s&redirect_uri=%s";
       String authorizeURL = String.format(template, mEnv.getWebHost().toURI(), mClientId, mRedirectURI.toString());
 
-      if(mScope != null) {
+      if (mScope != null) {
         authorizeURL += "&scope=" + mScope;
       }
 
       return URI.create(authorizeURL).toURL();
-    } catch(MalformedURLException e) {
+    } catch (MalformedURLException e) {
       e.printStackTrace();
       return null;
     }
@@ -161,9 +164,9 @@ public class ReadmillWrapper {
   public Token obtainToken(String authorizationCode) {
     try {
       return obtainTokenOrThrow(authorizationCode);
-    } catch(IOException e) {
+    } catch (IOException e) {
       e.printStackTrace();
-    } catch(JSONException e) {
+    } catch (JSONException e) {
       e.printStackTrace();
     }
     return null;
@@ -184,21 +187,21 @@ public class ReadmillWrapper {
    * @throws JSONException if the response was not proper json
    */
   public Token obtainTokenOrThrow(String authorizationCode) throws IOException, JSONException {
-    if(mRedirectURI == null) {
+    if (mRedirectURI == null) {
       throw new RuntimeException("Redirect URI must be set before calling obtainToken()");
     }
 
     String resourceUrl = String.format("%s/oauth/token", mEnv.getWebHost());
 
     Request obtainRequest = Request.to(resourceUrl).withParams(
-        "grant_type", "authorization_code",
-        "client_id", mClientId,
-        "client_secret", mClientSecret,
-        "code", authorizationCode,
-        "redirect_uri", mRedirectURI
+      "grant_type", "authorization_code",
+      "client_id", mClientId,
+      "client_secret", mClientSecret,
+      "code", authorizationCode,
+      "redirect_uri", mRedirectURI
     );
 
-    if(mScope != null) {
+    if (mScope != null) {
       obtainRequest.withParams("scope", mScope);
     }
 
@@ -206,18 +209,17 @@ public class ReadmillWrapper {
     JSONObject tokenJson = new JSONObject(tokenResponse);
     return new Token(tokenJson);
   }
-  
+
   /**
    * Obtains a token by providing username and password credentials.
    * <p/>
    * Uses scope set on the wrapper with #setScope().
-   * 
+   *
    * @param username The Readmill account username (email address)
    * @param password The account password
    * @return The obtained token
    * @throws IOException   if a network error occurs
    * @throws JSONException if the response was not proper json
-   * 
    */
   public Token login(String username, String password) throws IOException, JSONException {
     if (username == null || password == null) {
@@ -234,7 +236,7 @@ public class ReadmillWrapper {
       "password", password
     );
 
-    if(mScope != null) {
+    if (mScope != null) {
       obtainRequest.withParams("scope", mScope);
     }
 
@@ -242,26 +244,48 @@ public class ReadmillWrapper {
     JSONObject tokenJson = new JSONObject(tokenResponse);
     return new Token(tokenJson);
   }
-  
+
   /**
    * Gets the http client used to make requests.
    *
    * @return The HttpClient used for making requests with this wrapper
    */
   public HttpClient getHttpClient() {
-    if(mHttpClient == null) {
-      HttpParams httpParams = new BasicHttpParams();
-
-      Scheme httpScheme = new Scheme("http", PlainSocketFactory.getSocketFactory(), 80);
-      Scheme httpsScheme = new Scheme("https", SSLSocketFactory.getSocketFactory(), 443);
-
-      final SchemeRegistry schemeRegistry = new SchemeRegistry();
-      schemeRegistry.register(httpScheme);
-      schemeRegistry.register(httpsScheme);
-
-      mHttpClient = new DefaultHttpClient(new ThreadSafeClientConnManager(httpParams, schemeRegistry), httpParams);
+    if (mHttpClient == null) {
+      mHttpClient = createHttpClient();
     }
     return mHttpClient;
+  }
+
+  /**
+   * Creates the HttpClient used for making requests to the API.
+   * <p/>
+   * Override this method if you want to use a different configuration.
+   *
+   * @return the
+   */
+  protected HttpClient createHttpClient() {
+    HttpParams httpParams = new BasicHttpParams();
+
+    HttpClientParams.setRedirecting(httpParams, false);
+
+    Scheme httpScheme = new Scheme("http", PlainSocketFactory.getSocketFactory(), 80);
+    Scheme httpsScheme = new Scheme("https", SSLSocketFactory.getSocketFactory(), 443);
+
+    final SchemeRegistry registry = new SchemeRegistry();
+    registry.register(httpScheme);
+    registry.register(httpsScheme);
+
+    return new DefaultHttpClient(new ThreadSafeClientConnManager(httpParams, registry), httpParams) {
+      {
+        setKeepAliveStrategy(new ConnectionKeepAliveStrategy() {
+          @Override
+          public long getKeepAliveDuration(HttpResponse httpResponse, HttpContext httpContext) {
+            return 20 * 1000;
+          }
+        });
+      }
+    };
   }
 
   /**
@@ -393,17 +417,17 @@ public class ReadmillWrapper {
    * @return The authorized request.
    */
   protected Request authorizeRequest(Request request) {
-    if(request.getToken() != null) {
+    if (request.getToken() != null) {
       // Already authenticated with token
       return request;
     }
 
-    if(mToken != null) {
+    if (mToken != null) {
       // Authenticate with wrapper token
       return request.usingToken(mToken);
     }
 
-    if(mClientId != null) {
+    if (mClientId != null) {
       // Authenticate with client id
       return request.withParams("client_id", mClientId);
     }
