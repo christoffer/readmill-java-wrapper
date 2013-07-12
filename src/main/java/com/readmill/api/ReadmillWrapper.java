@@ -31,6 +31,7 @@ public class ReadmillWrapper {
   private HttpClient mHttpClient;
   private URI mRedirectURI;
   private String mScope;
+  private String mUserAgent;
 
   /**
    * A list of clients that are interested to know when the token has changed.
@@ -127,6 +128,22 @@ public class ReadmillWrapper {
    */
   public void setScope(String scope) {
     mScope = scope;
+  }
+
+  /**
+   * Sets the user agent string to use for all subsequent requests.
+   *
+   * @param userAgent the string to send as "User-Agent" header
+   */
+  public void setUserAgent(String userAgent) {
+    mUserAgent = userAgent;
+  }
+
+  /**
+   * Gets the user agent string used for requests.
+   */
+  public String getUserAgent() {
+      return mUserAgent;
   }
 
   /**
@@ -388,7 +405,11 @@ public class ReadmillWrapper {
    */
   protected HttpResponse execute(Request request, Class<? extends HttpRequestBase> klass) throws IOException {
     authorizeRequest(request);
-    return getHttpClient().execute(resolveTarget(request), request.build(klass));
+    HttpRequestBase httpRequest = request.build(klass);
+    if(mUserAgent != null) {
+        httpRequest.setHeader("User-Agent", mUserAgent);
+    }
+    return getHttpClient().execute(resolveTarget(request), httpRequest);
   }
 
   /**
