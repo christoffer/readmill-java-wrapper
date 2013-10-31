@@ -309,7 +309,7 @@ public class ReadmillWrapper {
    * Starts building a GET request to a given endpoint.
    *
    * @param uri Endpoint for the request
-   * @return a RequestBuilder for a request to the given endpint and verb
+   * @return a RequestBuilder for a request to the given endpoint and verb
    */
   public RequestBuilder get(String uri) {
     return new RequestBuilder(this, HttpGet.class, uri);
@@ -329,7 +329,7 @@ public class ReadmillWrapper {
    * Starts building a POST request to a given endpoint.
    *
    * @param uri Endpoint for the request
-   * @return a RequestBuilder for a request to the given endpint and verb
+   * @return a RequestBuilder for a request to the given endpoint and verb
    */
   public RequestBuilder post(String uri) {
     return new RequestBuilder(this, HttpPost.class, uri);
@@ -339,7 +339,7 @@ public class ReadmillWrapper {
    * Starts building a DELETE request to a given endpoint.
    *
    * @param uri Endpoint for the request
-   * @return a RequestBuilder for a request to the given endpint and verb
+   * @return a RequestBuilder for a request to the given endpoint and verb
    */
   public RequestBuilder delete(String uri) {
     return new RequestBuilder(this, HttpDelete.class, uri);
@@ -349,7 +349,7 @@ public class ReadmillWrapper {
    * Starts building a PUT request to a given endpoint.
    *
    * @param uri Endpoint for the request
-   * @return a RequestBuilder for a request to the given endpint and verb
+   * @return a RequestBuilder for a request to the given endpoint and verb
    */
   public RequestBuilder put(String uri) {
     return new RequestBuilder(this, HttpPut.class, uri);
