@@ -33,7 +33,7 @@ import java.util.List;
 public class Request {
   private List<NameValuePair> params = new ArrayList<NameValuePair>();
   private Token mToken;
-  private String mResource;
+  protected String mResource;
 
   @SuppressWarnings("UnusedDeclaration")
 
