@@ -4,10 +4,7 @@ import org.apache.http.Header;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Before;
@@ -242,6 +239,13 @@ public class ReadmillWrapperTest {
   public void get() {
     RequestBuilder builder = mWrapper.get("/endpoint");
     assertThat(builder.getRequestBaseClass().getName(), is(HttpGet.class.getName()));
+    assertThat(builder.getRequest().toUrl(), containsString("/endpoint"));
+  }
+
+  @Test
+  public void head() {
+    RequestBuilder builder = mWrapper.head("/endpoint");
+    assertThat(builder.getRequestBaseClass().getName(), is(HttpHead.class.getName()));
     assertThat(builder.getRequest().toUrl(), containsString("/endpoint"));
   }
 

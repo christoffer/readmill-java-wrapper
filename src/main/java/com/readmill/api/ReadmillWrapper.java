@@ -316,6 +316,16 @@ public class ReadmillWrapper {
   }
 
   /**
+   * Starts building a HEAD request to a given endpoint.
+   *
+   * @param uri Endpoint for the request
+   * @return a RequestBuilder for a request to the given endpoint and verb
+   */
+  public RequestBuilder head(String uri) {
+    return new RequestBuilder(this, HttpHead.class, uri);
+  }
+
+  /**
    * Starts building a POST request to a given endpoint.
    *
    * @param uri Endpoint for the request
@@ -355,6 +365,17 @@ public class ReadmillWrapper {
    */
   public HttpResponse get(Request request) throws IOException {
     return execute(request, HttpGet.class);
+  }
+
+  /**
+   * Sends a request as HEAD.
+   *
+   * @param request Request to send
+   * @return The HttpResponse
+   * @throws IOException if a network error occurred
+   */
+  public HttpResponse head(Request request) throws IOException {
+    return execute(request, HttpHead.class);
   }
 
   /**
