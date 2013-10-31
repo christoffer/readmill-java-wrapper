@@ -185,6 +185,31 @@ public class Request {
   }
 
   /**
+   * Protected *
+   */
+
+  /**
+   * Gets the current resource.
+   *
+   * Relative resources are prefixed with /v2/. Absolute resources are left as
+   * is.
+   *
+   * @return The resource
+   */
+  protected String getResource() {
+    if(mResource != null) {
+      try {
+        URI resourceUri = new URI(mResource);
+        if(resourceUri.isAbsolute()) {
+          return mResource;
+        }
+      } catch(URISyntaxException ignored) {}
+      return (mResource.startsWith("/") ? "/v2" : "/v2/") + mResource;
+    }
+    return mResource;
+  }
+
+  /**
    * Private *
    */
 
@@ -216,26 +241,5 @@ public class Request {
     if(mToken != null && mToken.isValid()) {
       request.setHeader("Authorization", String.format("OAuth %s", mToken.getAccessToken()));
     }
-  }
-
-  /**
-   * Gets the current resource.
-   *
-   * Relative resources are prefixed with /v2/. Absolute resources are left as
-   * is.
-   *
-   * @return The resource
-   */
-  private String getResource() {
-    if(mResource != null) {
-      try {
-        URI resourceUri = new URI(mResource);
-        if(resourceUri.isAbsolute()) {
-          return mResource;
-        }
-      } catch(URISyntaxException ignored) {}
-      return (mResource.startsWith("/") ? "/v2" : "/v2/") + mResource;
-    }
-    return mResource;
   }
 }
