@@ -411,6 +411,23 @@ public class ReadmillWrapper {
     return execute(request, HttpDelete.class);
   }
 
+  /**
+   * Expands a Request into a fully qualified URL.
+   * @param request Base request
+   * @return The resulting URI
+   */
+  public URI expand(Request request) {
+    if(mClientId != null) {
+      request.withParams("client_id", mClientId);
+    }
+
+    if(mToken != null) {
+      request.withParams("access_token", mToken.getAccessToken());
+    }
+
+    return URI.create(mEnv.getApiHost().toURI()).resolve(request.toUrl());
+  }
+
 
   /*
   * Protected
