@@ -270,6 +270,19 @@ public class ReadmillWrapperTest {
     assertThat(builder.getRequest().toUrl(), containsString("/endpoint"));
   }
 
+  @Test
+  public void expand() {
+    Token myToken = new Token("haxxess", "refreshorz", "*");
+    mWrapper.setToken(myToken);
+
+    Request request = Request.to("/users/1/avatar").withParams("size", "medium");
+
+    URI actual = mWrapper.expand(request);
+    URI expected = URI.create("https://api.example.com/v2/users/1/avatar?size=medium&client_id=my_client_id&access_token=haxxess");
+
+    assertThat(actual, is(expected));
+  }
+
   // Helpers
 
   private HttpClient stubbedHttpClient() {
